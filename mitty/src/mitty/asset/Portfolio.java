@@ -3,6 +3,7 @@ package mitty.asset;
 import static mitty.util.Out.df;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mitty.market.MarketTicker;
@@ -10,13 +11,20 @@ import mitty.trade.TradeJournal;
 
 public class Portfolio {
 
-	public Portfolio(Assets assets) {
+	public Portfolio(MoneyMarket moneyMarket) {
 		super();
-		this.assets = assets;
+		this.moneyMarket = moneyMarket;
+		setup();
 	}
 
-	Assets assets;
+	void setup() {
+		List<PortfolioEntry> portFolioEntries = PortfolioEntry.getAll();
+		for (PortfolioEntry entry : portFolioEntries) {
+			portfolio.put(entry.symbol, entry);
+		}
+	}
 
+	MoneyMarket moneyMarket;
 
 	Map<String, PortfolioEntry> portfolio = new HashMap<String, PortfolioEntry>();
 	MarketTicker ticker = MarketTicker.instance();
@@ -34,7 +42,7 @@ public class Portfolio {
 
 		double stockPrice = ticker.getQuote(symbol);
 		double buyCost = numberofstock * stockPrice;
-		if (assets.getMoneyMarket().getBalance() < buyCost) {
+		if (moneyMarket.getBalance() < buyCost) {
 			return false;
 		}
 
@@ -42,11 +50,12 @@ public class Portfolio {
 		if (hold == null) {
 			hold = new PortfolioEntry();
 		}
-        hold.symbol=symbol;
+		hold.symbol = symbol;
 		hold.number += numberofstock;
 		hold.cost += buyCost;
 		portfolio.put(symbol, hold);
-		assets.getMoneyMarket().take(buyCost);
+		hold.store();
+		moneyMarket.take(buyCost);
 		TradeJournal.instance().addEntry(symbol, stockPrice, numberofstock, 0);
 		return true;
 
@@ -70,9 +79,10 @@ public class Portfolio {
 			hold.cost -= valueToReduce;
 
 			Double totalSale = numberofstock * stockPrice;
-			assets.getMoneyMarket().deposit(totalSale);
+			moneyMarket.deposit(totalSale);
 
 			portfolio.put(symbol, hold);
+			hold.store();
 
 			Double gain = totalSale - valueToReduce;
 

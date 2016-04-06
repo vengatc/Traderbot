@@ -5,14 +5,27 @@ import static mitty.util.Out.*;
 public class Assets {
 	private MoneyMarket moneyMarket;
 	private Portfolio portfolio;
+	private String accountID;
 
-	Assets(double amount) {
-		moneyMarket = new MoneyMarket(amount, this);
-		portfolio = new Portfolio(this);
+	//creates initially the balance will be zero.
+	
+	Assets(String accountID) {
+		moneyMarket = MoneyMarket.getInstance(accountID);
+		portfolio = new Portfolio(moneyMarket);
+		this.accountID = accountID;
 
 	}
+	
 
-	static Assets instance = new Assets(0);
+	static Assets instance = new Assets("vengatc");
+
+	public String getAccountID() {
+		return accountID;
+	}
+
+	public void setAccountID(String accountID) {
+		this.accountID = accountID;
+	}
 
 	public static Assets instance() {
 		return instance;
