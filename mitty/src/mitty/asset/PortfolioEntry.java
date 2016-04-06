@@ -66,12 +66,12 @@ public class PortfolioEntry  {
 	 
 	public void store() {
 		StorageManager.instance().getAccessor().portfolioEntryBySymbol.put(this);
-		StorageManager.instance().close();
+		StorageManager.instance().sync();
 		
 	}
 	public static PortfolioEntry findByPK(String primaryKey) {
 		return StorageManager.instance().getAccessor().portfolioEntryBySymbol.get(primaryKey);
-		
+
 	}
 
 	public static List<PortfolioEntry> getAll() throws DatabaseException {

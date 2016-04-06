@@ -37,6 +37,8 @@ public class DbEnvironment {
         // Open the environment and entity store
         dbenv = new Environment(envHome, myEnvConfig);
         store = new EntityStore(dbenv, "EntityStore", storeConfig);
+        
+        sync();
 
     }
 
@@ -72,5 +74,52 @@ public class DbEnvironment {
                System.exit(-1);
             }
         }
+    }
+    
+    
+    
+ // sync the store , but this does not persist the entry completely. so not in
+    // use until we understand fully.
+    public void flush() {
+    	
+    	
+        if (store != null) {
+            try {
+                store.sync();
+            } catch(DatabaseException dbe) {
+                System.err.println("Error closing store: " +
+                                    dbe.toString());
+               System.exit(-1);
+            }
+        }
+      System.out.println("Entitystore flushed..");
+       
+    }
+    
+    
+ // sync the store and environment.
+    public void sync() {
+        if (store != null) {
+            try {
+                store.sync();
+            } catch(DatabaseException dbe) {
+                System.err.println("Error closing store: " +
+                                    dbe.toString());
+               System.exit(-1);
+            }
+        }
+
+        if (dbenv != null) {
+            try {
+                // Finally, close the environment.
+                dbenv.sync();
+            } catch(DatabaseException dbe) {
+                System.err.println("Error closing dbenv: " +
+                                    dbe.toString());
+               System.exit(-1);
+            }
+        }
+        
+        System.out.println("Full flush....");
     }
 } 

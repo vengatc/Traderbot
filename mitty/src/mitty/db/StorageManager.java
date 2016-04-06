@@ -9,11 +9,11 @@ public class StorageManager {
 
 	static StorageManager instance = new StorageManager();
 
-	private static File myDbEnvPath = new File("/tmp/venky");
+	private static File myDbEnvPath = new File("/tmp/venky4");
 
 	private DataAccessor accessor;
 
-	 boolean started = false;
+	boolean started = false;
 
 	// Encapsulates the database environment.
 	private static DbEnvironment myDbEnv = new DbEnvironment();
@@ -35,7 +35,7 @@ public class StorageManager {
 
 	void start() {
 
-		if(!myDbEnvPath.exists()) {
+		if (!myDbEnvPath.exists()) {
 			myDbEnvPath.mkdirs();
 		}
 		boolean readOnly = false;
@@ -49,10 +49,22 @@ public class StorageManager {
 
 	}
 
+	public void sync() {
+
+		myDbEnv.sync();
+
+	}
+
+	public void flush() {
+   //syncs only the entity store.
+		myDbEnv.flush();
+
+	}
+
 	public void close() {
 		System.out.println("closing storage");
 		myDbEnv.close();
-		
+
 		started = false;
 	}
 
