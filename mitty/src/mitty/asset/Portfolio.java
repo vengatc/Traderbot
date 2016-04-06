@@ -17,17 +17,8 @@ public class Portfolio {
 
 	Assets assets;
 
-	public class StockHold {
-		int number;
-		double cost;
 
-		double avgPrice() {
-			return cost / number;
-		}
-
-	}
-
-	Map<String, StockHold> portfolio = new HashMap<String, StockHold>();
+	Map<String, PortfolioEntry> portfolio = new HashMap<String, PortfolioEntry>();
 	MarketTicker ticker = MarketTicker.instance();
 
 	public double getAvgCostPrice(String symbol) {
@@ -47,11 +38,11 @@ public class Portfolio {
 			return false;
 		}
 
-		StockHold hold = portfolio.get(symbol);
+		PortfolioEntry hold = portfolio.get(symbol);
 		if (hold == null) {
-			hold = new StockHold();
+			hold = new PortfolioEntry();
 		}
-
+        hold.symbol=symbol;
 		hold.number += numberofstock;
 		hold.cost += buyCost;
 		portfolio.put(symbol, hold);
@@ -71,7 +62,7 @@ public class Portfolio {
 	public boolean sell(String symbol, int numberofstock) {
 		double inhold = inhold(symbol);
 		if (inhold >= numberofstock) {
-			StockHold hold = portfolio.get(symbol);
+			PortfolioEntry hold = portfolio.get(symbol);
 			double stockPrice = ticker.getQuote(symbol);
 
 			double valueToReduce = numberofstock * hold.avgPrice();
@@ -95,7 +86,7 @@ public class Portfolio {
 
 	public double currentValue() {
 		double value = 0;
-		for (Map.Entry<String, StockHold> stockOnHold : portfolio.entrySet()) {
+		for (Map.Entry<String, PortfolioEntry> stockOnHold : portfolio.entrySet()) {
 			value += ticker.getQuote(stockOnHold.getKey()) * stockOnHold.getValue().number;
 		}
 		return value;
@@ -105,7 +96,7 @@ public class Portfolio {
 
 		String txt;
 		txt = "Portfolio \n";
-		for (Map.Entry<String, StockHold> entry : portfolio.entrySet()) {
+		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
 			txt += entry.getKey() + ":" + df.format(entry.getValue().number) + "\n";
 		}
 		txt += "Total portfolio value : " + df.format(currentValue()) + "\n";
