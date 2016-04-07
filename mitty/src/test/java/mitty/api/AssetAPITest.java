@@ -30,7 +30,7 @@ public class AssetAPITest {
 
 	@Test
 	public void testTotalValue() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/asset/").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get("/assets/status/").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("Total Assets")));
 	}

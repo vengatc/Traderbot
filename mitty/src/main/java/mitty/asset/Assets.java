@@ -2,7 +2,13 @@ package mitty.asset;
 
 import static mitty.util.Out.*;
 
+import org.apache.log4j.Logger;
+
+
 public class Assets {
+	
+	final static Logger logger = Logger.getLogger(Assets.class);
+
 	private MoneyMarket moneyMarket;
 	private Portfolio portfolio;
 	private String accountID;

@@ -8,12 +8,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import org.apache.log4j.Logger;
+
 import mitty.asset.Assets;
 import mitty.statergy.TradeStatergy;
 
 //Bot that works to execute the trade statergy.
 
 public class Bot {
+
+	final static Logger logger = Logger.getLogger(Bot.class);
 
 	List<TradeStatergy> statergies = new ArrayList<TradeStatergy>();
 
