@@ -6,7 +6,7 @@ import mitty.statergy.ProfitBooker;
 import mitty.statergy.UpHill;
 
 public class Trader {
-	public static void main(String argv[]) {
+	public static void start() {
 	      Bot bot = new Bot();
 
 	  System.out.println ("Assets at start");
