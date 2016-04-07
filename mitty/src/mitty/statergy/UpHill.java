@@ -3,6 +3,8 @@ package mitty.statergy;
 import mitty.asset.Assets;
 import mitty.market.MarketTicker;
 
+import static mitty.util.Out.*;
+
 
 //climber prevents losses.
 
@@ -16,7 +18,7 @@ public class UpHill implements TradeStatergy {
 		super();
 		this.downTreshold = downTreshold;
 		this.symbol = symbol;
-		this.stockPrice = ticker.getQuote(symbol);
+		this.stockPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class UpHill implements TradeStatergy {
 
 		}
 		
-		System.out.println("Where on Hill: " + stockPrice);
+		System.out.println("Where on Hill: " + df.format(stockPrice));
 		
 	}
 

@@ -9,7 +9,7 @@ public class StorageManager {
 
 	static StorageManager instance = new StorageManager();
 
-	private static File myDbEnvPath = new File("/tmp/venky4");
+	private static File myDbEnvPath = new File("/tmp/venky");
 
 	private DataAccessor accessor;
 
