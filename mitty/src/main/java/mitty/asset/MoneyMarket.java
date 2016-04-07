@@ -1,6 +1,5 @@
 package mitty.asset;
 
-import static com.sleepycat.persist.model.Relationship.MANY_TO_ONE;
 import static mitty.util.Out.*;
 
 import java.util.ArrayList;
@@ -20,15 +19,12 @@ import mitty.db.StorageManager;
 public class MoneyMarket {
 	@NotPersistent
 	Assets assets;
-	
-    double balance;
-    
+
+	double balance;
+
 	@PrimaryKey
 	String accountID;
-	
-   
 
-	
 	public String getAccountID() {
 		return accountID;
 	}
@@ -36,7 +32,7 @@ public class MoneyMarket {
 	public void setAccountID(String accountID) {
 		this.accountID = accountID;
 	}
-	
+
 	public double getBalance() {
 		return balance;
 	}
@@ -45,25 +41,25 @@ public class MoneyMarket {
 		this.balance = balance;
 		store();
 	}
-	
 
 	public synchronized double take(double amount) {
-		try{
-		if (balance >= amount) {
-			balance -= amount;
-			return amount;
-		} else {
-			amount = balance;
-			balance = 0;
-			return amount;
-		}}finally{
+		try {
+			if (balance >= amount) {
+				balance -= amount;
+				return amount;
+			} else {
+				amount = balance;
+				balance = 0;
+				return amount;
+			}
+		} finally {
 			store();
 		}
 
 	}
 
 	public synchronized void deposit(double amount) {
-		
+
 		balance += amount;
 		store();
 	}
@@ -71,19 +67,17 @@ public class MoneyMarket {
 	public String toString() {
 		return "MoneyMarket Balance:" + df.format(getBalance()) + "\n";
 	}
-	
-	//create if absent.
-	 static MoneyMarket getInstance(String accountID)
-	    {
-	    	MoneyMarket moneyMarket = findByPK(accountID);
-	    	if(moneyMarket == null){
-	    		moneyMarket = new MoneyMarket();
-	    		moneyMarket.setAccountID(accountID);
-	    		moneyMarket.store();
-	    	}
-	    	return moneyMarket;
-	    }
-		
+
+	// create if absent.
+	static MoneyMarket getInstance(String accountID) {
+		MoneyMarket moneyMarket = findByPK(accountID);
+		if (moneyMarket == null) {
+			moneyMarket = new MoneyMarket();
+			moneyMarket.setAccountID(accountID);
+			moneyMarket.store();
+		}
+		return moneyMarket;
+	}
 
 	public void store() {
 		StorageManager.instance().getAccessor().moneyMarketByaccountID.put(this);
@@ -100,8 +94,7 @@ public class MoneyMarket {
 			List<MoneyMarket> list = new ArrayList<MoneyMarket>();
 			// Get a cursor that will walk every
 			// PortfolioEntry object in the store.
-			EntityCursor<MoneyMarket> items = StorageManager.instance().getAccessor().moneyMarketByaccountID
-					.entities();
+			EntityCursor<MoneyMarket> items = StorageManager.instance().getAccessor().moneyMarketByaccountID.entities();
 
 			try {
 				for (MoneyMarket item : items) {
@@ -116,5 +109,3 @@ public class MoneyMarket {
 
 	}
 }
-
-
