@@ -36,6 +36,7 @@ public class PortfolioEntry  {
 	double cost;
 
 	double avgPrice() {
+		if(number == 0 ) return 0;
 		return cost / number;
 	}
 

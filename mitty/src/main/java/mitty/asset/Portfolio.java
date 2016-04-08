@@ -1,6 +1,6 @@
 package mitty.asset;
 
-import static mitty.util.Out.df;
+import static mitty.util.Out.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +107,7 @@ public class Portfolio {
 		String txt;
 		txt = "Portfolio \n";
 		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
-			txt += "symbol:"+entry.getKey() + " : " + "no."+df.format(entry.getValue().number) +" : "+ "cost"+ df.format(entry.getValue().avgPrice()) + " : " + "Current"+ MarketTicker.instance().getQuote(entry.getKey())+ "\n";
+			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().number) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
 		}
 		txt += "Total portfolio value : " + df.format(currentValue()) + "\n";
 
