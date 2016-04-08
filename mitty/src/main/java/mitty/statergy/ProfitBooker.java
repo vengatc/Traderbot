@@ -1,6 +1,6 @@
 package mitty.statergy;
 
-import static mitty.util.Out.df;
+import static mitty.util.Out.*;
 
 import mitty.asset.Assets;
 import mitty.market.MarketTicker;
@@ -38,7 +38,7 @@ public class ProfitBooker implements TradeStatergy {
 			System.out.println("Decided to wait");
 		}
 		
-		System.out.println("Current Profit Percent: " + df.format(percentdiff));
+		System.out.println("Current Profit Percent: " + decimal(percentdiff));
 		
 	}
 

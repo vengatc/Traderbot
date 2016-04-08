@@ -109,7 +109,7 @@ public class Portfolio {
 		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
 			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().number) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
 		}
-		txt += "Total portfolio value : " + df.format(currentValue()) + "\n";
+		txt += "Total portfolio value : " + decimal(currentValue()) + "\n";
 
 		return txt;
 	}

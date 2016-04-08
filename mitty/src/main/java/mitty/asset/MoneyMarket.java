@@ -65,7 +65,7 @@ public class MoneyMarket {
 	}
 
 	public String toString() {
-		return "MoneyMarket Balance:" + df.format(getBalance()) + "\n";
+		return "MoneyMarket Balance:" + decimal(getBalance()) + "\n";
 	}
 
 	// create if absent.

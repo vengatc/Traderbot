@@ -57,7 +57,7 @@ public class Assets {
 		txt = moneyMarket.toString();
 		txt += portfolio.toString();
 
-		txt += "Total Assets=" + df.format(getTotalValue()) + "\n";
+		txt += "Total Assets=" + decimal(getTotalValue()) + "\n";
 
 		return txt;
 	}

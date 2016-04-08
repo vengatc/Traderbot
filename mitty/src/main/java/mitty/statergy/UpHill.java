@@ -39,7 +39,7 @@ public class UpHill implements TradeStatergy {
 
 		}
 		
-		System.out.println("Where on Hill: " + df.format(stockPrice));
+		System.out.println("Where on Hill: " + decimal(stockPrice));
 		
 	}
 
