@@ -38,6 +38,7 @@ public class PortfolioEntry  {
 	double avgPrice() {
 		if (number == 0 || number == Double.NaN || cost==0 || cost == Double.NaN)
 			return 0;
+		//Prevent not a Double.NaN issue will corrupt the DB.
 		return cost / number;
 	}
 
@@ -58,14 +59,10 @@ public class PortfolioEntry  {
 	}
 
 	public double getCost() {
-		if(cost==Double.NaN) {
-			setCost(0);
-		}
 		return cost;
 	}
 
 	public void setCost(double cost) {
-		if(cost==Double.NaN) cost = 0;
 		this.cost = cost;
 	}
 
