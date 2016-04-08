@@ -36,7 +36,8 @@ public class PortfolioEntry  {
 	private double cost;
 
 	double avgPrice() {
-		if(number == 0 || number==Double.NaN ) return 0;
+		if (number == 0 || number == Double.NaN || cost==0 || cost == Double.NaN)
+			return 0;
 		return cost / number;
 	}
 
