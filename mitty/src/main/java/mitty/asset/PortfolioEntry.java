@@ -17,7 +17,7 @@ import java.util.List;
 public class PortfolioEntry  {
 
 	@PrimaryKey
-	String symbol;
+	private String symbol;
 		
 	/*
 	@SecondaryKey(relate=MANY_TO_ONE)
@@ -32,8 +32,8 @@ public class PortfolioEntry  {
 		this.accountID = accountID;
 	}*/
 
-	int number;
-	double cost;
+	private int number;
+	private double cost;
 
 	double avgPrice() {
 		if(number == 0 || number==Double.NaN ) return 0;
@@ -57,10 +57,14 @@ public class PortfolioEntry  {
 	}
 
 	public double getCost() {
+		if(cost==Double.NaN) {
+			setCost(0);
+		}
 		return cost;
 	}
 
 	public void setCost(double cost) {
+		if(cost==Double.NaN) cost = 0;
 		this.cost = cost;
 	}
 

@@ -20,7 +20,7 @@ public class Portfolio {
 	void setup() {
 		List<PortfolioEntry> portFolioEntries = PortfolioEntry.getAll();
 		for (PortfolioEntry entry : portFolioEntries) {
-			portfolio.put(entry.symbol, entry);
+			portfolio.put(entry.getSymbol(), entry);
 		}
 	}
 
@@ -34,7 +34,7 @@ public class Portfolio {
 	}
 
 	public void sellAll(String symbol) {
-		sell(symbol, portfolio.get(symbol).number);
+		sell(symbol, portfolio.get(symbol).getNumber());
 	}
 
 	public boolean buy(String symbol, int numberofstock) {
@@ -50,9 +50,9 @@ public class Portfolio {
 		if (hold == null) {
 			hold = new PortfolioEntry();
 		}
-		hold.symbol = symbol;
-		hold.number += numberofstock;
-		hold.cost += buyCost;
+		hold.setSymbol(symbol);
+		hold.setNumber(hold.getNumber()+ numberofstock);
+		hold.setCost(hold.getCost() + buyCost);
 		portfolio.put(symbol, hold);
 		hold.store();
 		moneyMarket.take(buyCost);
@@ -63,7 +63,7 @@ public class Portfolio {
 
 	double inhold(String symbol) {
 		if (portfolio.get(symbol) != null)
-			return portfolio.get(symbol).number;
+			return portfolio.get(symbol).getNumber();
 		else
 			return 0;
 	}
@@ -75,8 +75,8 @@ public class Portfolio {
 			double stockPrice = ticker.getQuote(symbol);
 
 			double valueToReduce = numberofstock * hold.avgPrice();
-			hold.number -= numberofstock;
-			hold.cost -= valueToReduce;
+			hold.setNumber(hold.getNumber() -numberofstock);
+			hold.setCost(hold.getCost() -valueToReduce);
 
 			Double totalSale = numberofstock * stockPrice;
 			moneyMarket.deposit(totalSale);
@@ -97,7 +97,7 @@ public class Portfolio {
 	public double currentValue() {
 		double value = 0;
 		for (Map.Entry<String, PortfolioEntry> stockOnHold : portfolio.entrySet()) {
-			value += ticker.getQuote(stockOnHold.getKey()) * stockOnHold.getValue().number;
+			value += ticker.getQuote(stockOnHold.getKey()) * stockOnHold.getValue().getNumber();
 		}
 		return value;
 	}
@@ -107,7 +107,7 @@ public class Portfolio {
 		String txt;
 		txt = "Portfolio \n";
 		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
-			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().number) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
+			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().getNumber()) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
 		}
 		txt += "Total portfolio value : " + decimal(currentValue()) + "\n";
 
