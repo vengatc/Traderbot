@@ -18,6 +18,12 @@ public class StorageManager {
 	// Encapsulates the database environment.
 	private static DbEnvironment myDbEnv = new DbEnvironment();
 
+   //can be set to manupulate the storage manager for testablity.	
+	public static void setPath(String envPath)
+	{
+		myDbEnvPath =  new File(envPath);
+	}
+	
 	public DataAccessor getAccessor() {
 		return accessor;
 	}
