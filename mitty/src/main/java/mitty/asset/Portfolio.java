@@ -107,7 +107,7 @@ public class Portfolio {
 		String txt;
 		txt = "Portfolio \n";
 		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
-			txt += entry.getKey() + ":" + df.format(entry.getValue().number) + "\n";
+			txt += "symbol:"+entry.getKey() + " : " + "no."+df.format(entry.getValue().number) +" : "+ "cost"+ df.format(entry.getValue().avgPrice()) + " : " + "Current"+ MarketTicker.instance().getQuote(entry.getKey())+ "\n";
 		}
 		txt += "Total portfolio value : " + df.format(currentValue()) + "\n";
 
