@@ -39,6 +39,7 @@ public class TestPortfolio {
 		// Trying various options here.
 		// getting from DB without closing.
 		PortfolioEntry pe = PortfolioEntry.findByPK("GLD");
+		
 		assertTrue("Pe is null", pe != null);
 		assertTrue("pe.number" + pe.getNumber(), pe.getNumber() == 102);
 		Assets.instance().getPortfolio().sellAll("GLD");

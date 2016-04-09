@@ -2,6 +2,7 @@ package mitty.api;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import mitty.asset.Assets;
 import mitty.bot.Bot;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,8 @@ public class BotAPI {
 
 	@RequestMapping("status")
 	public String tradeDecisions() {
-		return Bot.instance().tradeDecisions();
+		String portfolio = Assets.instance().getPortfolio().toString();
+		return portfolio + "\n"+ Bot.instance().tradeDecisions();
 	}
 
 }
