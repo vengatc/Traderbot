@@ -105,7 +105,7 @@ public class Portfolio {
 	public String toString() {
 
 		String txt;
-		txt = "Portfolio \n";
+		txt = "PORTFOLIO \n";
 		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
 			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().getNumber()) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
 		}

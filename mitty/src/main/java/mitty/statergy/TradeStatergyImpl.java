@@ -5,7 +5,7 @@ import mitty.market.MarketTicker;
 
 abstract public class TradeStatergyImpl implements TradeStatergy {
 
-	protected String decision;
+	protected String decision = "";
 	protected boolean isActive;
 	protected String symbol;
 	protected MarketTicker ticker = MarketTicker.instance();
