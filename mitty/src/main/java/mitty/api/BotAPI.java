@@ -13,9 +13,9 @@ public class BotAPI {
 
 	@RequestMapping("status")
 	public String tradeDecisions() {
-		String status = Assets.instance().getPortfolio().toString();
-		status += "STATERGY\n";
-		return status + Bot.instance().tradeDecisions();
+		String status = Assets.instance().toString();
+		status += "STATERGY {\n";
+		return status + Bot.instance().tradeDecisions() +"}\n";
 	}
 
 }

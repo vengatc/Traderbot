@@ -65,7 +65,7 @@ public class MoneyMarket {
 	}
 
 	public String toString() {
-		return "MoneyMarket Balance:" + decimal(getBalance()) + "\n";
+		return "MONEYMARKET { (Balance):" + decimal(getBalance()) + "}\n";
 	}
 
 	// create if absent.

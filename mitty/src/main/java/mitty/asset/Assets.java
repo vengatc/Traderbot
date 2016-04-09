@@ -53,11 +53,11 @@ public class Assets {
 
 	public String toString() {
 
-		String txt;
-		txt = moneyMarket.toString();
+		String txt = "ASSETS{\n";
+		txt += moneyMarket.toString();
 		txt += portfolio.toString();
 
-		txt += "Total Assets=" + decimal(getTotalValue()) + "\n";
+		txt += "Total Assets=" + decimal(getTotalValue()) + "}\n";
 
 		return txt;
 	}
