@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/portfolio")
 public class PortfolioAPI {
 
-	@RequestMapping("status/")
+	@RequestMapping("status")
 	public String status() {
 		return Assets.instance().getPortfolio().toString();
 	}

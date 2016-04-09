@@ -17,6 +17,12 @@ import mitty.statergy.TradeStatergy;
 
 public class Bot {
 
+	private static Bot instance = new Bot();
+
+	static public Bot instance() {
+		return instance;
+	}
+
 	final static Logger logger = Logger.getLogger(Bot.class);
 
 	List<TradeStatergy> statergies = new ArrayList<TradeStatergy>();
@@ -30,6 +36,18 @@ public class Bot {
 		return statergies;
 	}
 
+	public String tradeDecisions() {
+		String decisions = "";
+		for (TradeStatergy statergy : getStatergies()) {
+
+			if (statergy.isActive()) {
+				decisions += statergy.getDecision() + "\n";
+			}
+
+		}
+		return decisions;
+	}
+
 	public void addStatergy(TradeStatergy statergy) {
 		statergies.add(statergy);
 	}
@@ -40,8 +58,8 @@ public class Bot {
 				for (TradeStatergy statergy : statergies) {
 					statergy.execute();
 				}
-				
-		        System.out.println(Assets.instance().toString());
+
+				System.out.println(Assets.instance().toString());
 
 			}
 		};

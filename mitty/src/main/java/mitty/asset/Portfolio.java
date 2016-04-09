@@ -61,7 +61,7 @@ public class Portfolio {
 
 	}
 
-	double inhold(String symbol) {
+	public double inhold(String symbol) {
 		if (portfolio.get(symbol) != null)
 			return portfolio.get(symbol).getNumber();
 		else

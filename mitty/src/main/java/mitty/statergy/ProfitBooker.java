@@ -3,43 +3,46 @@ package mitty.statergy;
 import static mitty.util.Out.*;
 
 import mitty.asset.Assets;
-import mitty.market.MarketTicker;
 
 // books profit over a percentage.
 
-public class ProfitBooker implements TradeStatergy {
+public class ProfitBooker extends TradeStatergyImpl {
 	double sellTreshold;
-	String symbol;
-	private MarketTicker ticker = MarketTicker.instance();
 
 	public ProfitBooker(double sellTreshold, String symbol) {
-		super();
+		super(symbol);
 		this.sellTreshold = sellTreshold;
-		this.symbol = symbol;
 	}
 
 	@Override
 	public void execute() {
-		
-		System.out.println("Checking ProfitBooker statergy for :"+symbol);
-		double costPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
-		double pricediff = ticker.getQuote(symbol) - costPrice;
-		double percentdiff = ((Math.abs(pricediff) / costPrice) * 100);
-		
-		if (pricediff > 0 && percentdiff >= sellTreshold) {
-			System.out.println("Decided to sell");
-			Assets.instance().getPortfolio().sellAll(symbol);
-			
-			
-		} else {
-			if (pricediff < 0) {
-				percentdiff = 0 - percentdiff;
+
+		try {
+			decision = "ProfitBooker statergy : " + symbol;
+
+			if (!isActive()) {
+				return;
 			}
-			System.out.println("Decided to wait");
+			double costPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
+
+			double pricediff = ticker.getQuote(symbol) - costPrice;
+			double percentdiff = ((Math.abs(pricediff) / costPrice) * 100);
+
+			if (pricediff > 0 && percentdiff >= sellTreshold) {
+				decision += " [Decided to sell]";
+				Assets.instance().getPortfolio().sellAll(symbol);
+
+			} else {
+				if (pricediff < 0) {
+					percentdiff = 0 - percentdiff;
+				}
+				decision += " [Decided to wait]";
+			}
+
+			decision += " [Current Profit percentage:" + decimal(percentdiff) + "]";
+		} finally {
+			System.out.println(decision);
 		}
-		
-		System.out.println("Current Profit Percent: " + decimal(percentdiff));
-		
 	}
 
 }

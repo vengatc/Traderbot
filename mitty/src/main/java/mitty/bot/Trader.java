@@ -7,7 +7,7 @@ import mitty.statergy.UpHill;
 
 public class Trader {
 	public static void start() {
-	      Bot bot = new Bot();
+	      Bot bot = Bot.instance();
 
 	  System.out.println ("Assets at start");
 	  System.out.println ( Assets.instance().toString());

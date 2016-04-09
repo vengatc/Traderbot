@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/assets")
 public class AssetAPI {
 
-    @RequestMapping("status/")
+    @RequestMapping("status")
     public String totalValue() {
         return Assets.instance().toString();
     }

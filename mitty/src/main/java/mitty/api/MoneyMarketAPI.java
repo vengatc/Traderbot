@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/moneymarket")
 public class MoneyMarketAPI {
 
-    @RequestMapping("status/")
+    @RequestMapping("status")
     public String status() {
         return Assets.instance().getMoneyMarket().toString();
     }
