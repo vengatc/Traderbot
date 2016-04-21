@@ -8,6 +8,9 @@ import static mitty.util.Out.*;
 //climber prevents losses.
 
 public class UpHill extends TradeStatergyImpl {
+	
+	String name = "uphill";
+
 	double downTreshold;
 	double stockPrice;
 

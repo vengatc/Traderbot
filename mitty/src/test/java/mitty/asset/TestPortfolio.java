@@ -18,7 +18,10 @@ public class TestPortfolio {
 	static String dbPath = "/tmp/testenv";
 
 	@BeforeClass
-	static public void setup() {
+	static public void setup() throws IOException {
+		Assets.reset();
+		FileUtils.deleteDirectory(new File(dbPath));
+		StorageManager.instance().close();
 		StorageManager.setPath(dbPath);
 		StorageManager.instance();
 		Assets.instance().getMoneyMarket().deposit(100000);

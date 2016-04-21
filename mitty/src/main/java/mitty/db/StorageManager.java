@@ -29,6 +29,9 @@ public class StorageManager {
 	}
 
 	static public StorageManager instance() {
+		if(instance == null){
+			instance= new StorageManager();
+		}
 		if (!instance.started) {
 			synchronized (StorageManager.class) {
 				if (!instance.started) {
@@ -54,6 +57,8 @@ public class StorageManager {
 		started = true;
 
 	}
+	
+	
 
 	public void sync() {
 

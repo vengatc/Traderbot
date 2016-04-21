@@ -7,6 +7,8 @@ import mitty.asset.Assets;
 // books profit over a percentage.
 
 public class ProfitBooker extends TradeStatergyImpl {
+	
+	String name = "profitbooker";
 	double sellTreshold;
 
 	public ProfitBooker(double sellTreshold, String symbol) {

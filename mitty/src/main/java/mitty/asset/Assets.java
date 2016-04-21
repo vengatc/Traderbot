@@ -23,7 +23,7 @@ public class Assets {
 	}
 	
 
-	static Assets instance = new Assets("vengatc");
+	static Assets instance;
 
 	public String getAccountID() {
 		return accountID;
@@ -33,8 +33,15 @@ public class Assets {
 		this.accountID = accountID;
 	}
 
-	public static Assets instance() {
+	public synchronized static  Assets instance() {
+		if(instance==null){
+			instance = new Assets("vengatc");
+		}
 		return instance;
+	}
+	
+	public synchronized static void reset() {
+		instance=null;
 	}
 
 	public MoneyMarket getMoneyMarket() {
