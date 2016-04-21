@@ -69,7 +69,7 @@ public class MoneyMarket {
 	}
 
 	// create if absent.
-	static MoneyMarket getInstance(String accountID) {
+	static MoneyMarket moneyMarketForAccount(String accountID) {
 		MoneyMarket moneyMarket = findByPK(accountID);
 		if (moneyMarket == null) {
 			moneyMarket = new MoneyMarket();

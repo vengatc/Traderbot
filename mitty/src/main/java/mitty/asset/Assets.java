@@ -9,15 +9,13 @@ public class Assets {
 	
 	final static Logger logger = Logger.getLogger(Assets.class);
 
-	private MoneyMarket moneyMarket;
 	private Portfolio portfolio;
 	private String accountID;
 
 	//creates initially the balance will be zero.
 	
 	Assets(String accountID) {
-		moneyMarket = MoneyMarket.getInstance(accountID);
-		portfolio = new Portfolio(moneyMarket);
+		portfolio = new Portfolio(accountID);
 		this.accountID = accountID;
 
 	}
@@ -45,7 +43,7 @@ public class Assets {
 	}
 
 	public MoneyMarket getMoneyMarket() {
-		return moneyMarket;
+		return MoneyMarket.moneyMarketForAccount(accountID);
 	}
 
 	public Portfolio getPortfolio() {
@@ -53,7 +51,7 @@ public class Assets {
 	}
 
 	public double getTotalValue() {
-		double cash = moneyMarket.getBalance();
+		double cash = MoneyMarket.moneyMarketForAccount(accountID).getBalance();
 		double stockvalue = portfolio.currentValue();
 		return cash + stockvalue;
 	}
@@ -61,7 +59,7 @@ public class Assets {
 	public String toString() {
 
 		String txt = "ASSETS{\n";
-		txt += moneyMarket.toString();
+		txt += MoneyMarket.moneyMarketForAccount(accountID).toString();
 		txt += portfolio.toString();
 
 		txt += "Total Assets=" + decimal(getTotalValue()) + "}\n";

@@ -1,72 +1,69 @@
 package mitty.asset;
 
-import static mitty.util.Out.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static mitty.util.Out.decimal;
 
 import mitty.market.MarketTicker;
 import mitty.trade.TradeJournal;
 
+//Facade for Portfolio entry access.
 public class Portfolio {
 
-	public Portfolio(MoneyMarket moneyMarket) {
-		super();
-		this.moneyMarket = moneyMarket;
-		setup();
+	String accountID;
+	public Portfolio(String accountID) {
+		this.accountID = accountID;
 	}
 
-	void setup() {
-		List<PortfolioEntry> portFolioEntries = PortfolioEntry.getAll();
-		for (PortfolioEntry entry : portFolioEntries) {
-			portfolio.put(entry.getSymbol(), entry);
-		}
-	}
 
-	MoneyMarket moneyMarket;
-
-	Map<String, PortfolioEntry> portfolio = new HashMap<String, PortfolioEntry>();
 	MarketTicker ticker = MarketTicker.instance();
 
 	public double getAvgCostPrice(String symbol) {
-		if(inhold(symbol)<0){
-			return 0;
+		PortfolioEntry entry = PortfolioEntry.findByPK(symbol);
+		if (entry == null) {
+			throw new EntityNotFoundException();
+		} else {
+
+			return entry.avgPrice();
 		}
-		return portfolio.get(symbol).avgPrice();
 	}
 
 	public void sellAll(String symbol) {
-		sell(symbol, portfolio.get(symbol).getNumber());
+		PortfolioEntry entry = PortfolioEntry.findByPK(symbol);
+		if (entry != null) {
+		sell(symbol, entry.getNumber());
+		}
 	}
 
+	private MoneyMarket getMoneyMarket(){
+		return MoneyMarket.moneyMarketForAccount(accountID);
+	}
 	public boolean buy(String symbol, int numberofstock) {
 		ticker.addStock(symbol);
 
 		double stockPrice = ticker.getQuote(symbol);
 		double buyCost = numberofstock * stockPrice;
-		if (moneyMarket.getBalance() < buyCost) {
+		if (getMoneyMarket().getBalance() < buyCost) {
 			return false;
 		}
 
-		PortfolioEntry hold = portfolio.get(symbol);
+		PortfolioEntry hold = PortfolioEntry.findByPK(symbol);
 		if (hold == null) {
 			hold = new PortfolioEntry();
 		}
 		hold.setSymbol(symbol);
 		hold.setNumber(hold.getNumber()+ numberofstock);
 		hold.setCost(hold.getCost() + buyCost);
-		portfolio.put(symbol, hold);
 		hold.store();
-		moneyMarket.take(buyCost);
+		getMoneyMarket().take(buyCost);
 		TradeJournal.instance().addEntry(symbol, stockPrice, numberofstock, 0);
 		return true;
 
 	}
 
 	public double inhold(String symbol) {
-		if (portfolio.get(symbol) != null)
-			return portfolio.get(symbol).getNumber();
+		PortfolioEntry entry = PortfolioEntry.findByPK(symbol);
+
+		if (entry != null)
+			return entry.getNumber();
 		else
 			return 0;
 	}
@@ -74,7 +71,7 @@ public class Portfolio {
 	public boolean sell(String symbol, int numberofstock) {
 		double inhold = inhold(symbol);
 		if (inhold >= numberofstock) {
-			PortfolioEntry hold = portfolio.get(symbol);
+			PortfolioEntry hold = PortfolioEntry.findByPK(symbol);
 			double stockPrice = ticker.getQuote(symbol);
 
 			double valueToReduce = numberofstock * hold.avgPrice();
@@ -82,9 +79,8 @@ public class Portfolio {
 			hold.setCost(hold.getCost() -valueToReduce);
 
 			Double totalSale = numberofstock * stockPrice;
-			moneyMarket.deposit(totalSale);
+			getMoneyMarket().deposit(totalSale);
 
-			portfolio.put(symbol, hold);
 			hold.store();
 
 			Double gain = totalSale - valueToReduce;
@@ -99,8 +95,8 @@ public class Portfolio {
 
 	public double currentValue() {
 		double value = 0;
-		for (Map.Entry<String, PortfolioEntry> stockOnHold : portfolio.entrySet()) {
-			value += ticker.getQuote(stockOnHold.getKey()) * stockOnHold.getValue().getNumber();
+		for ( PortfolioEntry stockOnHold : PortfolioEntry.getAll()) {
+			value += ticker.getQuote(stockOnHold.getSymbol()) * stockOnHold.getNumber();
 		}
 		return value;
 	}
@@ -109,11 +105,18 @@ public class Portfolio {
 
 		String txt;
 		txt = "PORTFOLIO { \n";
-		for (Map.Entry<String, PortfolioEntry> entry : portfolio.entrySet()) {
-			txt += "symbol="+entry.getKey() + " : " + "no.="+decimal(entry.getValue().getNumber()) +" : "+ "cost="+ decimal(entry.getValue().avgPrice()) + " : " + "current="+ decimal(MarketTicker.instance().getQuote(entry.getKey()))+ "\n";
+		for (PortfolioEntry entry : PortfolioEntry.getAll()) {
+			txt += "symbol=" + entry.getSymbol() + " : " + "no.=" + decimal(entry.getNumber()) + " : " + "cost="
+					+ decimal(entry.avgPrice()) + " : " + "current="
+					+ decimal(MarketTicker.instance().getQuote(entry.getSymbol())) + "\n";
 		}
 		txt += "Total portfolio value : " + decimal(currentValue()) + "}\n";
 
 		return txt;
 	}
+}
+
+class EntityNotFoundException extends RuntimeException
+{
+       	
 }
