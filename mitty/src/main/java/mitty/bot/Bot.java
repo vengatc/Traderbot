@@ -3,7 +3,10 @@ package mitty.bot;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -25,14 +28,14 @@ public class Bot {
 
 	final static Logger logger = Logger.getLogger(Bot.class);
 
-	List<TradeStatergy> statergies = new ArrayList<TradeStatergy>();
+	Set<TradeStatergy> statergies = new LinkedHashSet<TradeStatergy>();
 
 	int interval;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	static ScheduledFuture<?> schedule = null;
 
-	public List<TradeStatergy> getStatergies() {
+	public Set<TradeStatergy> getStatergies() {
 		return statergies;
 	}
 

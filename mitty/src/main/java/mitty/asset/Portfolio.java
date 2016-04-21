@@ -61,7 +61,6 @@ public class Portfolio {
 
 	public double inhold(String symbol) {
 		PortfolioEntry entry = PortfolioEntry.findByPK(symbol);
-
 		if (entry != null)
 			return entry.getNumber();
 		else
