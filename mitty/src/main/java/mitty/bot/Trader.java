@@ -31,9 +31,7 @@ public class Trader {
       number = (int) (5000/price);
       Assets.instance().getPortfolio().buy(stock, number);
       
-      
-	 
-	  stock = "TSLA";
+  	  stock = "TSLA";
       UpHill uphillstatergy = new UpHill(1, stock,0);
       bot.addStatergy(uphillstatergy);
       ProfitBooker profitbooker = new ProfitBooker(1, stock);
