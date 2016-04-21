@@ -30,6 +30,9 @@ public class Portfolio {
 	MarketTicker ticker = MarketTicker.instance();
 
 	public double getAvgCostPrice(String symbol) {
+		if(inhold(symbol)<0){
+			return 0;
+		}
 		return portfolio.get(symbol).avgPrice();
 	}
 

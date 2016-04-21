@@ -17,7 +17,6 @@ public class UpHill extends TradeStatergyImpl {
 	public UpHill(double downTreshold, String symbol) {
 		super(symbol);
 		this.downTreshold = downTreshold;
-		this.stockPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
 	}
 
 	@Override
@@ -29,6 +28,8 @@ public class UpHill extends TradeStatergyImpl {
 			if (!isActive()) {
 				return;
 			}
+			this.stockPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
+
 
 			double pricediff = ticker.getQuote(symbol) - stockPrice;
 			double percentdiff = ((Math.abs(pricediff) / stockPrice) * 100);

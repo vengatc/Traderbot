@@ -48,6 +48,7 @@ public class StorageManager {
 			myDbEnvPath.mkdirs();
 		}
 		boolean readOnly = false;
+		System.out.println("myDb environment"+myDbEnvPath);
 		myDbEnv.setup(myDbEnvPath, // path to the environment home
 				false); // is this environment read-only?
 
