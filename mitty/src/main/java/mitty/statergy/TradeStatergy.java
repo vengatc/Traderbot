@@ -7,4 +7,6 @@ public interface TradeStatergy {
 	public String getDecision();
 
 	public boolean isActive();
+	
+	public String getName();
 }

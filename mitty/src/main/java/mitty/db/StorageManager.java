@@ -62,16 +62,10 @@ public class StorageManager {
 	
 
 	public void sync() {
-
 		myDbEnv.sync();
-
 	}
 
-	public void flush() {
-   //syncs only the entity store.
-		myDbEnv.flush();
 
-	}
 
 	public void close() {
 		System.out.println("closing storage");

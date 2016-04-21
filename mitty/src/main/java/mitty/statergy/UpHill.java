@@ -1,7 +1,7 @@
 package mitty.statergy;
 
 import mitty.asset.Assets;
-import mitty.market.MarketTicker;
+import mitty.asset.StatergyEntry;
 
 import static mitty.util.Out.*;
 
@@ -9,44 +9,68 @@ import static mitty.util.Out.*;
 
 public class UpHill extends TradeStatergyImpl {
 	
-	String name = "uphill";
+	public static final String DOWNTRESHOLD="downtreshold";
+	public static final String WHEREONHILL="whereonhill";
 
-	double downTreshold;
-	double stockPrice;
 
-	public UpHill(double downTreshold, String symbol) {
-		super(symbol);
-		this.downTreshold = downTreshold;
+	public UpHill(double downTreshold, String symbol,double whereOnHill) {
+		super(symbol,UpHill.class.getName());
+		
+		StatergyEntry statrgyEntry = StatergyEntry.findByPK(StatergyEntry.makeKey(symbol,name));
+		if(statrgyEntry == null){
+			statrgyEntry = new StatergyEntry(symbol,name);
+			statrgyEntry.getFields().put(DOWNTRESHOLD,downTreshold);
+			statrgyEntry.getFields().put(WHEREONHILL,whereOnHill);
+			statrgyEntry.store();
+			
+		}
+		
 	}
 
+	
+	static public UpHill getinstance(StatergyEntry entry){
+		return new UpHill(entry.getFields().get(DOWNTRESHOLD), entry.getSymbol(), entry.getFields().get(WHEREONHILL));
+	}
+	
 	@Override
 	public void execute() {
 
 		try {
+			
+			StatergyEntry entry = StatergyEntry.findByPK(StatergyEntry.makeKey(symbol,name));
+
 			decision = "Uphill statergy : " + symbol;
 
 			if (!isActive()) {
 				return;
 			}
-			this.stockPrice = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
+			
+			double whereOnHill=entry.getFields().get(WHEREONHILL);
+			double downTreshold=entry.getFields().get(DOWNTRESHOLD);
+			if (whereOnHill == 0) {
+				whereOnHill = Assets.instance().getPortfolio().getAvgCostPrice(symbol);
+			}
 
-
-			double pricediff = ticker.getQuote(symbol) - stockPrice;
-			double percentdiff = ((Math.abs(pricediff) / stockPrice) * 100);
+			double pricediff = ticker.getQuote(symbol) - whereOnHill;
+			double percentdiff = ((Math.abs(pricediff) / whereOnHill) * 100);
 			if (pricediff < 0 && percentdiff >= downTreshold) {
 				decision += " [Decided to sell]";
 				Assets.instance().getPortfolio().sellAll(symbol);
 
 			} else {
 				if (pricediff > 0) {
-					stockPrice = ticker.getQuote(symbol);
+					whereOnHill = ticker.getQuote(symbol);
 				}
 				decision += " [Decided to trail]";
 
 			}
-			decision += " [Where on Hill : " + decimal(stockPrice) + "]";
+			decision += " [Where on Hill : " + decimal(whereOnHill) + "]";
+			entry.getFields().put(WHEREONHILL,whereOnHill );
+			entry.store();
+
 		} finally {
 			System.out.println(decision);
+			
 		}
 	}
 

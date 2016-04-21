@@ -8,6 +8,7 @@ import com.sleepycat.persist.SecondaryIndex;
 
 import mitty.asset.MoneyMarket;
 import mitty.asset.PortfolioEntry;
+import mitty.asset.StatergyEntry;
                             
 public class DataAccessor {
     // Open the indices
@@ -33,6 +34,13 @@ public class DataAccessor {
         // Primary key for PortfolioEntry class
         moneyMarketByaccountID = store.getPrimaryIndex(
             String.class, MoneyMarket.class);
+        
+        statergyEntryBySymbol = store.getPrimaryIndex(
+                String.class, StatergyEntry.class);
+        
+       // statergyEntryByAccountID = store.getSecondaryIndex(
+        //		statergyEntryBySymbol, String.class, "accountID");
+
 
     }
 
@@ -42,5 +50,8 @@ public class DataAccessor {
     public PrimaryIndex<String,PortfolioEntry> portfolioEntryBySymbol;
     public SecondaryIndex<String,String,PortfolioEntry> portfolioEntryByAccountID;
     public PrimaryIndex<String,MoneyMarket> moneyMarketByaccountID;
+
+    public PrimaryIndex<String,StatergyEntry> statergyEntryBySymbol;
+   // public SecondaryIndex<String,String,StatergyEntry> statergyEntryByAccountID;
 
 } 

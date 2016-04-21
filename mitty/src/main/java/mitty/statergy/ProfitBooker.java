@@ -3,16 +3,31 @@ package mitty.statergy;
 import static mitty.util.Out.*;
 
 import mitty.asset.Assets;
+import mitty.asset.StatergyEntry;
 
 // books profit over a percentage.
 
 public class ProfitBooker extends TradeStatergyImpl {
 	
-	String name = "profitbooker";
+	public static final String SELLTRESHOLD="selltreshold";
+	
 	double sellTreshold;
 
+	
+	public static  ProfitBooker getinstance(StatergyEntry entry){
+		return new ProfitBooker(entry.getFields().get(SELLTRESHOLD), entry.getSymbol());
+	}
 	public ProfitBooker(double sellTreshold, String symbol) {
-		super(symbol);
+		
+		super(symbol,ProfitBooker.class.getName());
+		StatergyEntry statrgyEntry = StatergyEntry.findByPK(StatergyEntry.makeKey(symbol,name));
+		if(statrgyEntry == null){
+			statrgyEntry = new StatergyEntry(symbol,name);
+			statrgyEntry.getFields().put(SELLTRESHOLD,sellTreshold);
+			statrgyEntry.store();
+			
+		}
+		
 		this.sellTreshold = sellTreshold;
 	}
 

@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mitty.asset.Assets;
 import mitty.bot.Bot;
-import mitty.statergy.StatergyFactory;
+import mitty.statergy.StatergyManager;
 import mitty.statergy.TradeStatergy;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +25,7 @@ public class BotAPI {
 	@RequestMapping("addstatergy/{symbol}/{statergy}")
 	public synchronized boolean addStatergy(@PathVariable String symbol, @PathVariable String statergy) {
 		
-		TradeStatergy statergyinstance= StatergyFactory.createStatergy(symbol,statergy);
+		TradeStatergy statergyinstance= StatergyManager.createStatergy(symbol,statergy);
 		
 		if(statergyinstance!=null){
 			Bot.instance().addStatergy(statergyinstance);

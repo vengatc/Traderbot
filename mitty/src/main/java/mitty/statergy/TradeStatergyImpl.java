@@ -9,11 +9,17 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 	protected boolean isActive;
 	protected String symbol;
 	protected MarketTicker ticker = MarketTicker.instance();
+    protected String name;
 
-
-	public TradeStatergyImpl(String symbol)
+	public TradeStatergyImpl(String symbol,String name)
 	{
 		this.symbol=symbol;
+		this.name = name;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 
 	@Override
