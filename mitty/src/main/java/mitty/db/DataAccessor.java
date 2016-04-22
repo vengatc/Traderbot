@@ -6,6 +6,7 @@ import com.sleepycat.persist.EntityStore;
 import com.sleepycat.persist.PrimaryIndex;
 import com.sleepycat.persist.SecondaryIndex;
 
+import mitty.analysis.StockHistoryEntry;
 import mitty.asset.MoneyMarket;
 import mitty.asset.PortfolioEntry;
 import mitty.asset.StatergyEntry;
@@ -38,6 +39,9 @@ public class DataAccessor {
         statergyEntryBySymbol = store.getPrimaryIndex(
                 String.class, StatergyEntry.class);
         
+        //stockEntryBySymbol = store.getPrimaryIndex(
+         //       String.class, StockHistoryEntry.class);
+        
        // statergyEntryByAccountID = store.getSecondaryIndex(
         //		statergyEntryBySymbol, String.class, "accountID");
 
@@ -52,6 +56,8 @@ public class DataAccessor {
     public PrimaryIndex<String,MoneyMarket> moneyMarketByaccountID;
 
     public PrimaryIndex<String,StatergyEntry> statergyEntryBySymbol;
+    //public PrimaryIndex<String,StockHistoryEntry> stockEntryBySymbol;
+
    // public SecondaryIndex<String,String,StatergyEntry> statergyEntryByAccountID;
 
 } 
