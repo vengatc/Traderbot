@@ -39,7 +39,8 @@ public class UpHill extends TradeStatergyImpl {
 			
 			StatergyEntry entry = StatergyEntry.findByPK(StatergyEntry.makeKey(symbol,name));
 
-			decision = "Uphill statergy : " + symbol;
+			
+			decision = currentTime()+"Uphill statergy : " + symbol;
 
 			if (!isActive()) {
 				return;

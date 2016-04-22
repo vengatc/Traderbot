@@ -1,5 +1,9 @@
 package mitty.statergy;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import mitty.asset.Assets;
 import mitty.market.MarketTicker;
 
@@ -42,5 +46,13 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 		return isActive;
 
 	}
-    
+	
+	public String currentTime(){
+		Calendar cal = Calendar.getInstance();
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
+        SimpleDateFormat sdf = new SimpleDateFormat("(dd/MM HH:mm:ss) ");
+
+        String strDate = sdf.format(cal.getTime());
+        return strDate;
+	}
 }

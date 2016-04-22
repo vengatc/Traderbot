@@ -35,7 +35,7 @@ public class ProfitBooker extends TradeStatergyImpl {
 	public void execute() {
 
 		try {
-			decision = "ProfitBooker statergy : " + symbol;
+			decision = currentTime()+"ProfitBooker statergy : " + symbol;
 
 			if (!isActive()) {
 				return;
