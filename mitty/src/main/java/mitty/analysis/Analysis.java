@@ -1,11 +1,15 @@
 package mitty.analysis;
 
-import mitty.market.MarketTicker;
+import mitty.statergy.TradeStatergy;
 
-public class Analysis {
-	
- 	public static void main(String argv[])
-	{
-		MarketTicker.instance().addStock("GLD");
-	}
+public interface Analysis  extends TradeStatergy{
+
+	boolean isHit();
+
+	void chain(Analysis analysis);
+
+	Analysis next();
+
+	void process();
+
 }

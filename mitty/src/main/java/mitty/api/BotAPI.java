@@ -2,6 +2,7 @@ package mitty.api;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import mitty.analysis.RangeLowPriceHit;
 import mitty.asset.Assets;
 import mitty.bot.Bot;
 import mitty.market.MarketTicker;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BotAPI {
 
 	@RequestMapping("status")
-	public String tradeDecisions() {
+	public String status() {
 		String status = Assets.instance().toString();
 		status += "STATERGY {\n";
-		return status + Bot.instance().tradeDecisions() + "}\n";
+		status += Bot.instance().tradeDecisions() + "}\n";
+		
+		status += "ANALYSIS {\n";
+		return status + Bot.instance().analysisDecisions() + "}\n";
 	}
 
 	// setting the statergy for the symbol.
@@ -36,6 +40,9 @@ public class BotAPI {
 		}
 		return false;
 	}
+	
+	
+
 
 	@RequestMapping("loadtestdata")
 	public void loadSampleData() {
@@ -63,6 +70,9 @@ public class BotAPI {
 			stock = "GLD";
 			uphillstatergy = new UpHill(1, stock, 0);
 			bot.addStatergy(uphillstatergy);
+			
+			RangeLowPriceHit rlstager = new RangeLowPriceHit(stock);
+			bot.addStatergy(rlstager);
 		}
 
 	}

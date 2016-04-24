@@ -37,7 +37,7 @@ public class MarketTicker {
 		Double quote = StockQuote.getQuote(symbol);
 		assert (quote > 0);
 		stocks.put(symbol, quote);
-		System.out.println(symbol + ":" + quote);
+		//System.out.println(symbol + ":" + quote);
 	}
 
 	public double getQuote(String symbol)

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.apache.commons.csv.CSVRecord;
 import mitty.analysis.StockHistoryEntry;
 import mitty.util.In;
 
+//works of Yahoo data, change in the source require change here.
 public class StockHistory {
 
 	// CSV file header

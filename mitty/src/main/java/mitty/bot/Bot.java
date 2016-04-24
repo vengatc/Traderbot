@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.apache.log4j.Logger;
 
+import mitty.analysis.Analysis;
 import mitty.asset.Assets;
 import mitty.statergy.TradeStatergy;
 
@@ -29,14 +30,21 @@ public class Bot {
 	final static Logger logger = Logger.getLogger(Bot.class);
 
 	Set<TradeStatergy> statergies = new LinkedHashSet<TradeStatergy>();
+	Set<TradeStatergy> analysis = new LinkedHashSet<TradeStatergy>();
 
 	int interval;
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
 
-	static ScheduledFuture<?> schedule = null;
+	static ScheduledFuture<?> statergySchedule = null;
+	static ScheduledFuture<?> analysisSchedule = null;
 
 	public Set<TradeStatergy> getStatergies() {
 		return statergies;
+	}
+
+	public Set<TradeStatergy> getAnalaysis() {
+		return analysis;
 	}
 
 	public String tradeDecisions() {
@@ -51,8 +59,29 @@ public class Bot {
 		return decisions;
 	}
 
+	public String analysisDecisions() {
+		String decisions = "";
+		for (TradeStatergy statergy : getAnalaysis()) {
+
+			if (statergy.isActive()) {
+				decisions += statergy.getDecision() + "\n";
+			}
+
+		}
+		return decisions;
+	}
+
 	public void addStatergy(TradeStatergy statergy) {
-		statergies.add(statergy);
+		if (statergy instanceof Analysis) {
+			addAnalysis(statergy);
+		} else {
+			statergies.add(statergy);
+
+		}
+	}
+
+	public void addAnalysis(TradeStatergy statergy) {
+		analysis.add(statergy);
 	}
 
 	public synchronized void start() {
@@ -66,7 +95,19 @@ public class Bot {
 
 			}
 		};
-		schedule = scheduler.scheduleAtFixedRate(tick, 5, 5, SECONDS);
+		statergySchedule = scheduler1.scheduleAtFixedRate(tick, 5, 5, SECONDS);
+
+		final Runnable analysistick = new Runnable() {
+			public void run() {
+				for (TradeStatergy statergy : analysis) {
+					statergy.execute();
+				}
+
+				System.out.println(Assets.instance().toString());
+
+			}
+		};
+		analysisSchedule = scheduler2.scheduleAtFixedRate(analysistick, 5, 5, SECONDS);
 
 	}
 
