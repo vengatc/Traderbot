@@ -33,6 +33,8 @@ public class ProfitBooker extends TradeStatergyImpl {
 
 	@Override
 	public void execute() {
+		boolean actedOnDecision=false;
+
 
 		try {
 			decision = currentTime()+"ProfitBooker statergy : " + symbol;
@@ -46,8 +48,9 @@ public class ProfitBooker extends TradeStatergyImpl {
 			double percentdiff = ((Math.abs(pricediff) / costPrice) * 100);
 
 			if (pricediff > 0 && percentdiff >= sellTreshold) {
-				decision += " [Decided to sell]";
+				decision += " [Decided to sellAll]";
 				Assets.instance().getPortfolio().sellAll(symbol);
+				actedOnDecision = true;
 
 			} else {
 				if (pricediff < 0) {
@@ -58,6 +61,9 @@ public class ProfitBooker extends TradeStatergyImpl {
 
 			decision += " [Current Profit percentage:" + decimal(percentdiff) + "]";
 		} finally {
+			if(actedOnDecision){
+				actedOnDecision(decision);
+			}
 			System.out.println(decision);
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import mitty.asset.Assets;
 import mitty.market.MarketTicker;
+import mitty.notification.SMSNotification;
 
 abstract public class TradeStatergyImpl implements TradeStatergy {
 
@@ -55,4 +56,9 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
         String strDate = sdf.format(cal.getTime());
         return strDate;
 	}
+	
+	public void actedOnDecision(String action){
+		SMSNotification.notify("4084313537@txt.att.net", action);
+	}
+
 }

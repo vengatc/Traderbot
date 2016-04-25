@@ -37,9 +37,7 @@ public class StatergyManager {
 		Set<TradeStatergy> statergySet = new HashSet<TradeStatergy>();
 
 		for (StatergyEntry entry : StatergyEntry.getAll()) {
-			
-			System.out.println("######Statergy retrived ==" + entry.getStatergy());
-			
+						
 
 			if (entry.getStatergy().equals(ProfitBooker.class.getName())) {
 

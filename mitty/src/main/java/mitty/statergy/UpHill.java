@@ -35,6 +35,7 @@ public class UpHill extends TradeStatergyImpl {
 	@Override
 	public void execute() {
 
+		boolean actedOnDecision=false;
 		try {
 			
 			StatergyEntry entry = StatergyEntry.findByPK(StatergyEntry.makeKey(symbol,name));
@@ -55,8 +56,9 @@ public class UpHill extends TradeStatergyImpl {
 			double pricediff = ticker.getQuote(symbol) - whereOnHill;
 			double percentdiff = ((Math.abs(pricediff) / whereOnHill) * 100);
 			if (pricediff < 0 && percentdiff >= downTreshold) {
-				decision += " [Decided to sell]";
+				decision += " [Decided to sellall]";
 				Assets.instance().getPortfolio().sellAll(symbol);
+				actedOnDecision = true;
 
 			} else {
 				if (pricediff > 0) {
@@ -70,7 +72,13 @@ public class UpHill extends TradeStatergyImpl {
 			entry.store();
 
 		} finally {
+			
+			if(actedOnDecision){
+				actedOnDecision(decision);
+			}
 			System.out.println(decision);
+			
+			
 			
 		}
 	}
