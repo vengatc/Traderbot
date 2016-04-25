@@ -13,5 +13,6 @@ public class Out {
 	public static String decimal(double d) {
 		return df.format(d);
 	}
-
+	
+	
 }

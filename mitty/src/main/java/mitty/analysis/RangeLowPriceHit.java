@@ -12,7 +12,7 @@ import mitty.util.Out;
 
 public class RangeLowPriceHit extends AnalysisBase {
 
-	double days;
+	int days;
 	double percentageclose;
 	final static String PERCENTABOVELOW="%abovelow";
 	final static String DAYS="days";
@@ -38,7 +38,7 @@ public class RangeLowPriceHit extends AnalysisBase {
 			
 		}
 		
-		this.days = days;
+		this.days = (int) days;
 		this.percentageclose = percentageclose;
 		// TODO Auto-generated constructor stub
 	}
