@@ -5,7 +5,8 @@ import mitty.statergy.TradeStatergyImpl;
 abstract public class AnalysisBase extends TradeStatergyImpl implements Analysis {
 
 	protected Analysis next;
-	protected boolean hit = false;
+
+
 
 	public AnalysisBase(String symbol, String name) {
 		super(symbol, name);
@@ -18,13 +19,7 @@ abstract public class AnalysisBase extends TradeStatergyImpl implements Analysis
 
 	}
 
-	public void setHit(boolean hit) {
-		this.hit = hit;
-	}
-
-	public boolean isHit() {
-		return hit;
-	}
+	
 
 	public Analysis next() {
 		return next;
@@ -46,10 +41,14 @@ abstract public class AnalysisBase extends TradeStatergyImpl implements Analysis
 	public void execute() {
 		this.process();
 		if (isHit()) {
+			
 			if (next() != null) {
 				next.execute();
 			}
+			actedOnDecision(decision);
+
 		}
+		
 
 	}
 }

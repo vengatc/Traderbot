@@ -15,6 +15,10 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 	protected String symbol;
 	protected MarketTicker ticker = MarketTicker.instance();
     protected String name;
+	protected boolean hit = false;
+
+	
+	protected abstract void process();
 
 	public TradeStatergyImpl(String symbol,String name)
 	{
@@ -48,6 +52,13 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 
 	}
 	
+	public void setHit(boolean hit) {
+		this.hit = hit;
+	}
+
+	public boolean isHit() {
+		return hit;
+	}
 	public String currentTime(){
 		Calendar cal = Calendar.getInstance();
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
@@ -61,4 +72,13 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 		SMSNotification.notify("4084313537@txt.att.net", action);
 	}
 
+	
+	@Override
+	public void execute() {
+		process();
+		
+		if(isHit()){
+			actedOnDecision(decision);
+		}
+	}
 }

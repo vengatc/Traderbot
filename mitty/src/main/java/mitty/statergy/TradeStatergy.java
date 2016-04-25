@@ -11,4 +11,6 @@ public interface TradeStatergy {
 	public String getName();
 	
 	public void actedOnDecision(String action);
+	
+	boolean isHit();
 }

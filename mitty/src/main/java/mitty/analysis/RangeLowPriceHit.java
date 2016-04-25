@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import mitty.asset.StatergyEntry;
 import mitty.market.MarketTicker;
 import mitty.market.StockHistory;
-import mitty.statergy.ProfitBooker;
 import mitty.util.Out;
 
 public class RangeLowPriceHit extends AnalysisBase {
@@ -52,8 +51,7 @@ public class RangeLowPriceHit extends AnalysisBase {
 	@Override
 	public void process() {
 		
-		boolean actedOnDecision = false;
-
+		setHit(false);
 		decision = currentTime() + "RangeLowPriceHit analysis : " + symbol;
 
 		StockHistoryEntry history = StockHistory.getStockHistoryEntry(symbol);
@@ -70,15 +68,11 @@ public class RangeLowPriceHit extends AnalysisBase {
 		if (precentageDifference <= percentageclose) {
 			decision += " [ HIT ]";
 			setHit(true);
-			actedOnDecision = true;
 		} else {
 			decision += " [ MISS ]";
-			setHit(false);
 		}
 		System.out.println(decision);
-		if(actedOnDecision){
-			actedOnDecision(decision);
-		}
+		
 	}
 
 	TreeMap<Long, Double> lastXentries(TreeMap<Long, Double> closes, double size) {
