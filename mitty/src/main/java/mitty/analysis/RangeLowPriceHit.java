@@ -84,10 +84,10 @@ public class RangeLowPriceHit extends AnalysisBase {
 		return cutMap;
 	}
 
-	public static void main(String argv[]) {
+/*	public static void main(String argv[]) {
 		RangeLowPriceHit la = new RangeLowPriceHit("GLD");
 		la.execute();
 		System.out.println(la.getDecision());
-	}
+	}*/
 
 }

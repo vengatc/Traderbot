@@ -13,4 +13,9 @@ public interface TradeStatergy {
 	public void actedOnDecision(String action);
 	
 	boolean isHit();
+	
+	void chain(TradeStatergy analysis);
+
+	TradeStatergy next();
+
 }

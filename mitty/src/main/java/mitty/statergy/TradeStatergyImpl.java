@@ -2,7 +2,6 @@ package mitty.statergy;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import mitty.asset.Assets;
 import mitty.market.MarketTicker;
@@ -14,20 +13,18 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 	protected boolean isActive;
 	protected String symbol;
 	protected MarketTicker ticker = MarketTicker.instance();
-    protected String name;
+	protected String name;
 	protected boolean hit = false;
+	protected TradeStatergy next;
 
-	
 	protected abstract void process();
 
-	public TradeStatergyImpl(String symbol,String name)
-	{
-		this.symbol=symbol;
+	public TradeStatergyImpl(String symbol, String name) {
+		this.symbol = symbol;
 		this.name = name;
 	}
-	
-	public String getName()
-	{
+
+	public String getName() {
 		return name;
 	}
 
@@ -37,11 +34,10 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 		return decision;
 	}
 
-
 	@Override
 	public boolean isActive() {
 		if (Assets.instance().getPortfolio().inhold(symbol) == 0) {
-			decision +=" [inactive]";
+			decision += " [inactive]";
 			isActive = false;
 
 		} else {
@@ -51,7 +47,7 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 		return isActive;
 
 	}
-	
+
 	public void setHit(boolean hit) {
 		this.hit = hit;
 	}
@@ -59,26 +55,47 @@ abstract public class TradeStatergyImpl implements TradeStatergy {
 	public boolean isHit() {
 		return hit;
 	}
-	public String currentTime(){
-		Calendar cal = Calendar.getInstance();
-        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SS");
-        SimpleDateFormat sdf = new SimpleDateFormat("(dd/MM HH:mm:ss) ");
 
-        String strDate = sdf.format(cal.getTime());
-        return strDate;
+	public String currentTime() {
+		Calendar cal = Calendar.getInstance();
+		// SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy
+		// HH:mm:ss.SS");
+		SimpleDateFormat sdf = new SimpleDateFormat("(dd/MM HH:mm:ss) ");
+
+		String strDate = sdf.format(cal.getTime());
+		return strDate;
 	}
-	
-	public void actedOnDecision(String action){
+
+	public void actedOnDecision(String action) {
 		SMSNotification.notify("4084313537@txt.att.net", action);
 	}
 
-	
+	public TradeStatergy next() {
+		return next;
+	}
+
+	@Override
+	public void chain(TradeStatergy statergy) {
+
+		if (next != null) {
+			next.chain(statergy);
+		} else {
+			next = statergy;
+		}
+
+	}
+
 	@Override
 	public void execute() {
-		process();
-		
-		if(isHit()){
+		this.process();
+		if (isHit()) {
+
+			if (next() != null) {
+				next.execute();
+			}
 			actedOnDecision(decision);
+
 		}
 	}
+
 }
