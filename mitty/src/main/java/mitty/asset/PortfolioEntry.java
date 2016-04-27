@@ -69,7 +69,7 @@ public class PortfolioEntry  {
 	 
 	public void store() {
 		StorageManager.instance().getAccessor().portfolioEntryBySymbol.put(this);
-		StorageManager.instance().sync();
+		StorageManager.instance().close();
 		
 	}
 	public static PortfolioEntry findByPK(String primaryKey) {

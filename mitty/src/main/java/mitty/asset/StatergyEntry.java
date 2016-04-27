@@ -58,7 +58,7 @@ public class StatergyEntry  {
 	 
 	public void store() {
 		StorageManager.instance().getAccessor().statergyEntryBySymbol.put(this);
-		StorageManager.instance().sync();
+		StorageManager.instance().close();
 		
 	}
 	public static StatergyEntry findByPK(String primaryKey) {

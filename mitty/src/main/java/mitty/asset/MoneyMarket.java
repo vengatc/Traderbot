@@ -81,7 +81,7 @@ public class MoneyMarket {
 
 	public void store() {
 		StorageManager.instance().getAccessor().moneyMarketByaccountID.put(this);
-		StorageManager.instance().sync();
+		StorageManager.instance().close();
 	}
 
 	public static MoneyMarket findByPK(String primaryKey) {
