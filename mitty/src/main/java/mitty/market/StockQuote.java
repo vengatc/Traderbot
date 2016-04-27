@@ -15,28 +15,21 @@ import mitty.util.In;
  */
 public class StockQuote {
 
-	private String symbol; // stock ticker symbol
-	private Date time; // time the quote was taken;
-	private double price; // price of the stock when the quote was recorded
-
-	private static Vector<StockQuote> record = new Vector<StockQuote>(); // list
+	
 																			// of
 																			// all
 																			// requested
 																			// quotes
 
-	/**
-	 * Constructor: a new StockQuote for ticker symbol s, taken at time t, at
-	 * price p; the time will be now. Adds this StockQuote to the list of
-	 * record. Precondition: s is a valid ticker symbol (case doesn't matter).
-	 */
-	private StockQuote(String s, Date t, double p) {
-		symbol = s;
-		time = t;
-		price = p;
-		record.add(this);
-	}
 
+	
+	public static double getQuote(String s) {
+		
+			//return getQuoteYahoo(s);
+			
+		return getQuoteNasdaq(s);
+		}
+	
 	/**
 	 * Print current price of stock with ticker symbol s, and add the new quote
 	 * to the record. Print format: <symbol> @ <date>: $<price> Precondition: s
@@ -45,7 +38,7 @@ public class StockQuote {
 	 * 
 	 * @throws MalformedURLException
 	 */
-	public static double getQuote(String s) {
+	public static double getQuoteYahoo(String s) {
 
 		double price = 0.0;
 
@@ -68,23 +61,48 @@ public class StockQuote {
 		// System.out.println(new StockQuote(s, new Date(), price));
 		return price;
 	}
-
+	
+	
 	/**
-	 * = StockQuote at index i. Precondition: i is a valid index into the record
+	 * Print current price of stock with ticker symbol s, and add the new quote
+	 * to the record. Print format: <symbol> @ <date>: $<price> Precondition: s
+	 * is a valid ticker symbol (case doesn't matter): examples: "goog", "GOOG"
+	 * "MsFT"
+	 * 
+	 * @throws MalformedURLException
 	 */
-	public static StockQuote recordAt(int i) {
-		return record.get(i);
+	public static double getQuoteNasdaq(String s) {
+
+		double price = 0.0;
+
+		// find URL for data
+		String url = "http://www.nasdaq.com/symbol/" + s;
+
+		// treat the webpage as a String so we can process it
+		String targetText = new In(url).readAll();
+
+		// System.out.println(targetText);
+		// pull out the substring corresponding to the price
+		targetText = targetText.substring(targetText.indexOf("<span class=\"last-sale\">"));
+		targetText = targetText.substring(0, targetText.indexOf("</span>"));
+		targetText = targetText.substring(targetText.lastIndexOf("$") + 1);
+
+		
+		targetText = targetText.trim();
+		//System.out.println(targetText);
+		//targetText = targetText.substring(1);
+		//System.out.println(targetText);
+		
+		//targetText = targetText.substring(targetText.lastIndexOf(">") + 1);
+
+		// convert String in targetText to a double price
+		price = Double.parseDouble(targetText);
+
+		// record the new quote (by creating it) and print the info out
+		// System.out.println(new StockQuote(s, new Date(), price));
+		return price;
 	}
 
-	/** = String rep of record, using Vector's default toString format */
-	public static String showRecord() {
-		return record.toString();
-	}
-
-	/** = <symbol> @ <date>: $<price> */
-	public String toString() {
-		return symbol + " @ " + time + ": $" + price;
-	}
 
 	public static void main(String argv[]) {
 		test();
@@ -93,18 +111,11 @@ public class StockQuote {
 	/** just for private debugging purposes */
 	public static void test() {
 		// tests of getQuote
-		System.out.println("getting a google quote: ");
-		getQuote("goog");
-		System.out.println("getting a MSFT quote: ");
-		getQuote("msft");
-		System.out.println("getting an apple quote: ");
-		getQuote("aapl");
-		System.out.println("getting a google quote: ");
-		getQuote("goog");
+		System.out.println("getting a google quote:"+getQuote("goog"));
+		System.out.println("getting a MSFT quote: "+getQuote("msft"));
+		System.out.println("getting an apple quote: "+getQuote("aapl"));
+		
 
-		// tests of record (list) handling
-		System.out.println("\nlist of quotes:\n" + showRecord() + "\n\n");
-		System.out.println("element in record at index 0: " + recordAt(0));
 	}
 
 }
