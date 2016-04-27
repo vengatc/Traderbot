@@ -37,7 +37,7 @@ public class Portfolio {
 		return MoneyMarket.moneyMarketForAccount(accountID);
 	}
 	public boolean buy(String symbol, int numberofstock) {
-		ticker.addStock(symbol);
+		//ticker.addStock(symbol);
 
 		double stockPrice = ticker.getQuote(symbol);
 		double buyCost = numberofstock * stockPrice;

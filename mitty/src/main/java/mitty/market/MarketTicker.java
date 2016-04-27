@@ -14,25 +14,30 @@ public class MarketTicker {
 
 	
 	static MarketTicker instance = new MarketTicker();
-	static ScheduledFuture<?> schedule = null;
+	//static ScheduledFuture<?> schedule = null;
 	
 	public static MarketTicker instance()
 	{
 		
-		if(schedule==null)
+		/*if(schedule==null)
 		{
 			synchronized (MarketTicker.class)
 			{
 			if(schedule==null){
 			instance.start();}
 			}
-		}
+		}*/
 		return instance;
 	}
-	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	Map<String, Double> stocks = new HashMap<String, Double>();
 	
-	public void addStock(String symbol) {
+	public double getQuote(String symbol){
+		return StockQuote.getQuote(symbol);
+
+	}
+	//private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	//Map<String, Double> stocks = new HashMap<String, Double>();
+	
+	/*public void addStock(String symbol) {
 		// first get the price and then add.
 		Double quote = StockQuote.getQuote(symbol);
 		assert (quote > 0);
@@ -47,7 +52,7 @@ public class MarketTicker {
 			addStock(symbol);
 		return stocks.get(symbol);
 	}
-	public void removeStock(String symbol) {
+	/*public void removeStock(String symbol) {
 		stocks.remove(symbol);
 	}
 
@@ -77,5 +82,5 @@ public class MarketTicker {
 		ticker.addStock("AAPL");
 		ticker.addStock("GLD");
 		ticker.start();
-	}
+	}*/
 }
