@@ -59,6 +59,7 @@ public class UpHill extends TradeStatergyImpl {
 				decision += " [Decided to sellall]";
 				Assets.instance().getPortfolio().sellAll(symbol);
 				setHit(true);
+				whereOnHill = 0;
 
 			} else {
 				if (pricediff > 0) {
