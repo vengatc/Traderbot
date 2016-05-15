@@ -55,6 +55,13 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
+    <dependency>
+	<groupId>org.apache.hadoop</groupId>
+	<artifactId>hadoop-core</artifactId>
+	<version>0.20.2</version>
+    </dependency>
+  
 
 	</dependencies>
 
