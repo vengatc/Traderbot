@@ -1,4 +1,4 @@
-package mitty.buffetvalue.business;
+package mitty.buffet.buybusiness;
 
 /**
  * Created by i839511 on 5/21/17.

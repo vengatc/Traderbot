@@ -1,7 +1,10 @@
-package mitty.buffetvalue.business;
+package mitty.buffet.buybusiness;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by i839511 on 5/21/17.
@@ -23,7 +26,7 @@ public class Business implements Comparable<Business>{
     double currentRatio; //Money comming in / money going out per 12 months. totalCurrentAssets ( likable to convert to cash) / total current liablity (going to pay out in next 12 months)
     double eps;
     double roe; //return on equity.
-    double returnOnCurrentPrice;
+    double returnOnCurrentPrice =-999;
 
     public double getEps() {
         return eps;
@@ -54,9 +57,18 @@ public class Business implements Comparable<Business>{
         //        bus-> bus.printValuation()
         //);
 
+        List<Business> bs= Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).collect(Collectors.toList());//.forEach(
+
+        Collections.sort(bs,Collections.reverseOrder());
+
+
+        bs.stream().forEach(b->b.printValuation());
+        // System.out.println("SSSS");
+        //        bus-> bus.printValuation()
+        //);
 
         System.out.println("Date :"+ new Date().toString());
-        Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).forEach(bus -> {
+     /*   Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).forEach(bus -> {
             bus.printValuation();
             try {
                 Thread.sleep(1000);
@@ -64,6 +76,13 @@ public class Business implements Comparable<Business>{
             }
         });
 
+            Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).forEach(bus -> {
+            bus.printValuation();
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+*/
       /*  Business wfc = new Business("WFC",53.06,13.26,35.22);
         wfc.printValuation();
 
@@ -146,6 +165,19 @@ public class Business implements Comparable<Business>{
         return KeyNumbers.interestPercentage(pe);
     }
 
+    void compute() {
+
+        quickValuation();
+        quickValuationTool();
+        investmentSafetyPercentage();
+        interestPercentage();
+        vigilantLeaderShip();
+        intrinicValue();
+        intrinic5YearBookValue();
+        percentageReturnOnCurrentPrice();
+
+    }
+
     void printValuation() {
         System.out.println("______________________" + getTicker() + "______________________");
         System.out.printf("Price (%.2f) P/E(%.2f) BookValue(%.2f) Debt2Equity(%.2f) CurrentRatio(%.2f) TenYearGrowthBV(%.2f) FiveYearGrowthBV(%.2f) Divident(%.2f)  FedRate(%.2f) ROE(%.2f) \n", marketPrice, pe, bookValue, debtToEquity, currentRatio, tenBookValueGrowth, fiveYearBookValueGrowth, divident, tenYearFedRate,roe);
@@ -158,7 +190,7 @@ public class Business implements Comparable<Business>{
         System.out.printf(getTicker() + " Intrinic Value (10 Year book value avg)  of Stock= %.2f \n", intrinicValue());
         System.out.printf(getTicker() + " Intrinic Value (5 Year book value avg)  of Stock= %.2f \n", intrinic5YearBookValue());
 
-        System.out.printf(getTicker() + " Interest rate if bought on current market price = %.2f \n", percentageForCurrentPrice());
+        System.out.printf(getTicker() + " Interest rate if bought on current market price = %.2f \n", percentageReturnOnCurrentPrice());
 
     }
 
@@ -295,22 +327,32 @@ public class Business implements Comparable<Business>{
      *
      * @return
      */
-    double percentageForCurrentPrice() {
-        double i = 0.01;
-        double r = 0.5;
-        double iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
-        double mPrice = Math.floor(marketPrice);
-        while (iVal != mPrice) {
-            if (iVal > mPrice) r = r + i;
-            if (iVal < mPrice) r = r - i;
-            iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
-            //System.out.println(iVal+":"+r);
+    double percentageReturnOnCurrentPrice() {
+        if(returnOnCurrentPrice ==-999) {
+            double i = 0.01;
+            double r = 0.5;
+            double iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
+            double mPrice = Math.floor(marketPrice);
+            while (iVal != mPrice) {
+                if (iVal > mPrice) r = r + i;
+                if (iVal < mPrice) r = r - i;
+                iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
+                //System.out.println(iVal+":"+r);
+            }
+           returnOnCurrentPrice = r;
         }
-        return r;
+        return returnOnCurrentPrice;
     }
 
     @Override
     public int compareTo(Business o) {
+        return (int)(percentageReturnOnCurrentPrice() - o.percentageReturnOnCurrentPrice());
 
+    }
+   static  void sleep(int sleep) {
+        try {
+            Thread.sleep(sleep);
+        } catch (Exception e) {
+        }
     }
 }

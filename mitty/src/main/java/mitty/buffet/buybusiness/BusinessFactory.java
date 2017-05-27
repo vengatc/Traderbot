@@ -1,4 +1,4 @@
-package mitty.buffetvalue.business;
+package mitty.buffet.buybusiness;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
