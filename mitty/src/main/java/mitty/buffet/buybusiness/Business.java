@@ -9,9 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Created by i839511 on 5/21/17.
  */
-public class Business implements Comparable<Business>{
-
-
+public class Business implements Comparable<Business> {
 
 
     String ticker;
@@ -25,8 +23,9 @@ public class Business implements Comparable<Business>{
     double tenBookValueGrowth;
     double currentRatio; //Money comming in / money going out per 12 months. totalCurrentAssets ( likable to convert to cash) / total current liablity (going to pay out in next 12 months)
     double eps;
+
     double roe; //return on equity.
-    double returnOnCurrentPrice =-999;
+    double returnOnCurrentPrice = -999;
 
     public double getEps() {
         return eps;
@@ -44,57 +43,11 @@ public class Business implements Comparable<Business>{
     public void setRoe(double roe) {
         this.roe = roe;
     }
+
     public Business(String ticker) {
         this.ticker = ticker;
-     }
-
-    public static void main(String arg[]) {
-
-        String[] portfolio = {"SAP","BRK.B","WMT","TGT","WFC","AAPL","BAC","GS","AMAT","MSFT","GOOG","NVDA","COST"};
-
-        // List<Business> businesss = Arrays.stream(portfolio).map(ticker->BusinessFactory.businessFactory(ticker)).collect(Collectors.toList());//.forEach(
-        // System.out.println("SSSS");
-        //        bus-> bus.printValuation()
-        //);
-
-        List<Business> bs= Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).collect(Collectors.toList());//.forEach(
-
-        Collections.sort(bs,Collections.reverseOrder());
-
-
-        bs.stream().forEach(b->b.printValuation());
-        // System.out.println("SSSS");
-        //        bus-> bus.printValuation()
-        //);
-
-        System.out.println("Date :"+ new Date().toString());
-     /*   Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).forEach(bus -> {
-            bus.printValuation();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
-        });
-
-            Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).forEach(bus -> {
-            bus.printValuation();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
-*/
-      /*  Business wfc = new Business("WFC",53.06,13.26,35.22);
-        wfc.printValuation();
-
-        Business apple = new Business("AAPL",153.06,17.83 ,25.72);
-        apple.printValuation();
-
-        Business bac = new Business("BAC",23.05,14.14 ,24.41);
-        bac.printValuation();
-
-        Business gs = new Business("GS",215.39,11.48  ,192.35);
-        gs.printValuation();*/
     }
+
 
     public void setTenYearFedRate(double tenYearFedRate) {
         this.tenYearFedRate = tenYearFedRate;
@@ -147,7 +100,7 @@ public class Business implements Comparable<Business>{
 
 
     double quickValuation() {
-        double valueation = pe * KeyNumbers.priceByBookValue(bookValue, marketPrice);
+        double valueation = pe * priceByBookValue();
         return valueation;
     }
 
@@ -157,42 +110,9 @@ public class Business implements Comparable<Business>{
     }
 
     double investmentSafetyPercentage() {
-        return KeyNumbers.InvestmentSafetyPercentage(bookValue, marketPrice);
+        return InvestmentSafetyPercentage();
     }
 
-    double interestPercentage() {
-
-        return KeyNumbers.interestPercentage(pe);
-    }
-
-    void compute() {
-
-        quickValuation();
-        quickValuationTool();
-        investmentSafetyPercentage();
-        interestPercentage();
-        vigilantLeaderShip();
-        intrinicValue();
-        intrinic5YearBookValue();
-        percentageReturnOnCurrentPrice();
-
-    }
-
-    void printValuation() {
-        System.out.println("______________________" + getTicker() + "______________________");
-        System.out.printf("Price (%.2f) P/E(%.2f) BookValue(%.2f) Debt2Equity(%.2f) CurrentRatio(%.2f) TenYearGrowthBV(%.2f) FiveYearGrowthBV(%.2f) Divident(%.2f)  FedRate(%.2f) ROE(%.2f) \n", marketPrice, pe, bookValue, debtToEquity, currentRatio, tenBookValueGrowth, fiveYearBookValueGrowth, divident, tenYearFedRate,roe);
-
-        System.out.printf("valuation(<22.5) =  %.2f \n", quickValuation());
-        System.out.println(getTicker() + "passing quick valuation = " + quickValuationTool());
-        System.out.printf(getTicker() + " Investment safety percentage = %.2f\n", investmentSafetyPercentage());
-        System.out.printf(getTicker() + " Interest percentage = %.2f \n", interestPercentage());
-        System.out.printf(getTicker() + " Vigilant leadership check = " + vigilantLeaderShip() + "\n");
-        System.out.printf(getTicker() + " Intrinic Value (10 Year book value avg)  of Stock= %.2f \n", intrinicValue());
-        System.out.printf(getTicker() + " Intrinic Value (5 Year book value avg)  of Stock= %.2f \n", intrinic5YearBookValue());
-
-        System.out.printf(getTicker() + " Interest rate if bought on current market price = %.2f \n", percentageReturnOnCurrentPrice());
-
-    }
 
     /**
      * Rule 1.Vigialt leadership
@@ -322,13 +242,88 @@ public class Business implements Comparable<Business>{
     }
 */
 
+
+    /// BALACE SHEET ITEMS
+
+    /**
+     * Is the percentage of safetry for buying the business
+     * f0r the money invested.
+     * How mucgh percent of the money will be returned if
+     * the business closes today. liquidating all assets.
+     *
+     * @return
+     */
+    double marginOfSafety() {
+
+        //BookValue = Equity
+        //EbookValue = Equity/ Share outstanding.
+        //Equity = Total Liablity - total asset.
+        //
+        return bookValue / marketPrice;
+
+
+    }
+
+    /**
+     * Amount of dollars i pay for 1 dollar of equity.
+     * Every (P/BV) dollars i invest, i get it backed by 1 dollar of equity.
+     *
+     * @return
+     */
+    double priceByBookValue() {
+        return marketPrice / bookValue;
+    }
+
+
+    double InvestmentSafetyPercentage() {
+        return marginOfSafety() * 100;
+    }
+
+    double interestPercentage() {
+        return (1 / pe) * 100;
+    }
+
+    //INCOME STATEMENTS ITEMS
+
+    static double roe(double earningPerShare, double bookValuePerShare) {
+        return earningPerShare / bookValuePerShare;
+    }
+
+
+    /**
+     * return on investment ratio... PErcentage gives
+     * the interest percent per year.
+     */
+    static double roi(double earningPerShare, double marketPrice) {
+        return earningPerShare / marketPrice;
+    }
+
+
+    static double interestPercentage(double earningPerShare, double marketPrice) {
+        return roi(earningPerShare, marketPrice) * 100;
+    }
+
+    /**
+     * Amount of dollars you pay for 1 dollar return.
+     * <p>
+     * Every X(PE) Dollar i invest, i get 1 dollar a year back.
+     *
+     * @param earningPerShare
+     * @param marketPrice
+     * @return
+     */
+    static double priceByEarning(double earningPerShare, double marketPrice) {
+        return marketPrice / earningPerShare;
+    }
+
+
     /**
      * Perentage (interest) return per year , based on current market price.
      *
      * @return
      */
     double percentageReturnOnCurrentPrice() {
-        if(returnOnCurrentPrice ==-999) {
+        if (returnOnCurrentPrice == -999) {
             double i = 0.01;
             double r = 0.5;
             double iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
@@ -339,20 +334,62 @@ public class Business implements Comparable<Business>{
                 iVal = Math.floor(intrinicValue(r, tenBookValueGrowth));
                 //System.out.println(iVal+":"+r);
             }
-           returnOnCurrentPrice = r;
+            returnOnCurrentPrice = r;
         }
         return returnOnCurrentPrice;
     }
 
     @Override
     public int compareTo(Business o) {
-        return (int)(percentageReturnOnCurrentPrice() - o.percentageReturnOnCurrentPrice());
+        return (int) (percentageReturnOnCurrentPrice() - o.percentageReturnOnCurrentPrice());
 
     }
-   static  void sleep(int sleep) {
+
+    static void sleep(int sleep) {
         try {
             Thread.sleep(sleep);
         } catch (Exception e) {
         }
+    }
+
+
+    void compute() {
+
+        quickValuation();
+        quickValuationTool();
+        investmentSafetyPercentage();
+        interestPercentage();
+        vigilantLeaderShip();
+        intrinicValue();
+        intrinic5YearBookValue();
+        percentageReturnOnCurrentPrice();
+
+    }
+
+    void printValuation() {
+        System.out.println("______________________" + getTicker() + "______________________");
+        System.out.printf("Price (%.2f) P/E(%.2f) BookValue(%.2f) Debt2Equity(%.2f) CurrentRatio(%.2f) TenYearGrowthBV(%.2f) FiveYearGrowthBV(%.2f) Divident(%.2f)  FedRate(%.2f) ROE(%.2f) \n", marketPrice, pe, bookValue, debtToEquity, currentRatio, tenBookValueGrowth, fiveYearBookValueGrowth, divident, tenYearFedRate, roe);
+
+        System.out.printf("valuation(<22.5) =  %.2f \n", quickValuation());
+        System.out.println(getTicker() + "passing quick valuation = " + quickValuationTool());
+        System.out.printf(getTicker() + " Investment safety percentage = %.2f\n", investmentSafetyPercentage());
+        System.out.printf(getTicker() + " Interest percentage = %.2f \n", interestPercentage());
+        System.out.printf(getTicker() + " Vigilant leadership check = " + vigilantLeaderShip() + "\n");
+        System.out.printf(getTicker() + " Intrinic Value (10 Year book value avg)  of Stock= %.2f \n", intrinicValue());
+        System.out.printf(getTicker() + " Intrinic Value (5 Year book value avg)  of Stock= %.2f \n", intrinic5YearBookValue());
+
+        System.out.printf(getTicker() + " Interest rate if bought on current market price = %.2f \n", percentageReturnOnCurrentPrice());
+
+    }
+
+    public static void main(String arg[]) {
+
+        String[] portfolio = {"SAP", "BRK.B", "WMT", "TGT", "WFC", "AAPL", "BAC", "GS", "AMAT", "MSFT", "GOOG", "NVDA", "COST"};
+        List<Business> bs = Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).collect(Collectors.toList());//.forEach(
+
+        Collections.sort(bs, Collections.reverseOrder());
+        System.out.println("Date :" + new Date().toString());
+        bs.stream().forEach(b -> b.printValuation());
+
     }
 }
