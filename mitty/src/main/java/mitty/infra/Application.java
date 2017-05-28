@@ -13,7 +13,7 @@ public class Application {
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
-        System.out.println("Starting the trader...");
+        //System.out.println("Starting the trader...");
         //Trader.start();
 
         /*
