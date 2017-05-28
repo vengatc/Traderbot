@@ -27,6 +27,57 @@ public class Business implements Comparable<Business> {
     double roe; //return on equity.
     double returnOnCurrentPrice = -999;
 
+    public Business(String ticker) {
+        this.ticker = ticker;
+    }
+
+    static double roe(double earningPerShare, double bookValuePerShare) {
+        return earningPerShare / bookValuePerShare;
+    }
+
+    /**
+     * return on investment ratio... PErcentage gives
+     * the interest percent per year.
+     */
+    static double roi(double earningPerShare, double marketPrice) {
+        return earningPerShare / marketPrice;
+    }
+
+    static double interestPercentage(double earningPerShare, double marketPrice) {
+        return roi(earningPerShare, marketPrice) * 100;
+    }
+
+    /**
+     * Amount of dollars you pay for 1 dollar return.
+     * <p>
+     * Every X(PE) Dollar i invest, i get 1 dollar a year back.
+     *
+     * @param earningPerShare
+     * @param marketPrice
+     * @return
+     */
+    static double priceByEarning(double earningPerShare, double marketPrice) {
+        return marketPrice / earningPerShare;
+    }
+
+    static void sleep(int sleep) {
+        try {
+            Thread.sleep(sleep);
+        } catch (Exception e) {
+        }
+    }
+
+    public static void main(String arg[]) {
+
+        String[] portfolio = {"SAP", "BRK.B", "WMT", "TGT", "WFC", "AAPL", "BAC", "GS", "AMAT", "MSFT", "GOOG", "NVDA", "COST"};
+        List<Business> bs = Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).collect(Collectors.toList());//.forEach(
+
+        Collections.sort(bs, Collections.reverseOrder());
+        System.out.println("Date :" + new Date().toString());
+        bs.stream().forEach(b -> b.printValuation());
+
+    }
+
     public double getEps() {
         return eps;
     }
@@ -35,7 +86,6 @@ public class Business implements Comparable<Business> {
         this.eps = eps;
     }
 
-
     public double getRoe() {
         return roe;
     }
@@ -43,11 +93,6 @@ public class Business implements Comparable<Business> {
     public void setRoe(double roe) {
         this.roe = roe;
     }
-
-    public Business(String ticker) {
-        this.ticker = ticker;
-    }
-
 
     public void setTenYearFedRate(double tenYearFedRate) {
         this.tenYearFedRate = tenYearFedRate;
@@ -77,6 +122,35 @@ public class Business implements Comparable<Business> {
         this.marketPrice = marketPrice;
     }
 
+    /**
+     * Risk associated with owning  Investment.
+     *
+     * 1. Excessive Debt owned by company(only when tide goes out you will see who is swiming naked)
+     * 2. Overpaying for an investment (Price is what you pay , value is what you get)
+     * 3. Not knowing what you are doing.
+     *
+     * //Compare value with federal note.
+     *
+     * S&P rating anything with A.
+     * Municipal can be B.
+     * FED interest curve
+     *
+     * @param arg
+     */
+
+
+    /***
+     * Four Rules for INVESTING
+     *
+     * 1) Managed by viginalat leader (look aout for possible danger
+     *    (DEBT) => DEBT/EQUIT < 0.5 by waren.
+     * 2) Long term prospect
+     * 3) Stock must by stable and understandable.
+     * 4) Stock must be undervalued.
+     *
+
+     */
+
     public void setBookValue(double bookValue) {
         this.bookValue = bookValue;
     }
@@ -104,6 +178,11 @@ public class Business implements Comparable<Business> {
         return valueation;
     }
 
+
+    /*public double interinsicValueCalculator(){
+
+    }*/
+
     boolean quickValuationTool() {
 
         return quickValuation() < 22.5;
@@ -112,7 +191,6 @@ public class Business implements Comparable<Business> {
     double investmentSafetyPercentage() {
         return InvestmentSafetyPercentage();
     }
-
 
     /**
      * Rule 1.Vigialt leadership
@@ -124,35 +202,6 @@ public class Business implements Comparable<Business> {
     }
 
     /**
-     * Risk associated with owning  Investment.
-     *
-     * 1. Excessive Debt owned by company(only when tide goes out you will see who is swiming naked)
-     * 2. Overpaying for an investment (Price is what you pay , value is what you get)
-     * 3. Not knowing what you are doing.
-     *
-     * //Compare value with federal note.
-     *
-     * S&P rating anything with A.
-     * Municipal can be B.
-     * FED interest curve
-     *
-     * @param arg
-     */
-
-
-    /***
-     * Four Rules for INVESTING
-     *
-     * 1) Managed by viginalat leader (look aout for possible danger
-     *    (DEBT) => DEBT/EQUIT < 0.5 by waren.
-     * 2) Long term prospect
-     * 3) Stock must by stable and understandable.
-     * 4) Stock must be undervalued.
-     *
-     * @param arg
-     */
-
-    /**
      * 1) Managed by viginalat leader (look aout for possible danger
      * (DEBT) => DEBT/EQUIT < 0.5 by waren likes it.
      *
@@ -161,6 +210,11 @@ public class Business implements Comparable<Business> {
     public double getDebtToEquity() {
         return debtToEquity;
     }
+
+
+
+
+    /// BALACE SHEET ITEMS
 
     public void setDebtToEquity(double debtToEquity) {
         this.debtToEquity = debtToEquity;
@@ -183,11 +237,6 @@ public class Business implements Comparable<Business> {
         return debtToEquity;
     }
 
-
-    /*public double interinsicValueCalculator(){
-
-    }*/
-
     public void setCurrentRatio(double currentRatio) {
         this.currentRatio = currentRatio;
     }
@@ -195,6 +244,8 @@ public class Business implements Comparable<Business> {
     double intrinicValue() {
         return intrinicValue(tenYearFedRate, tenBookValueGrowth);
     }
+
+    //INCOME STATEMENTS ITEMS
 
     double intrinic5YearBookValue() {
         return intrinicValue(tenYearFedRate, fiveYearBookValueGrowth);
@@ -227,24 +278,6 @@ public class Business implements Comparable<Business> {
         return c;
     }
 
-
-    /*double gain(){
-
-        double currentBookValue = bookValue;
-        double oldBookValue = oldBookValue;
-        double noOfYears = 3;
-        double upper = 1/noOfYears;
-        double base = currentBookValue/oldBookValue;
-        double m= Math.pow(base,upper);
-        double c = 100*(m-1);
-        return c;
-
-    }
-*/
-
-
-    /// BALACE SHEET ITEMS
-
     /**
      * Is the percentage of safetry for buying the business
      * f0r the money invested.
@@ -274,7 +307,6 @@ public class Business implements Comparable<Business> {
         return marketPrice / bookValue;
     }
 
-
     double InvestmentSafetyPercentage() {
         return marginOfSafety() * 100;
     }
@@ -282,40 +314,6 @@ public class Business implements Comparable<Business> {
     double interestPercentage() {
         return (1 / pe) * 100;
     }
-
-    //INCOME STATEMENTS ITEMS
-
-    static double roe(double earningPerShare, double bookValuePerShare) {
-        return earningPerShare / bookValuePerShare;
-    }
-
-
-    /**
-     * return on investment ratio... PErcentage gives
-     * the interest percent per year.
-     */
-    static double roi(double earningPerShare, double marketPrice) {
-        return earningPerShare / marketPrice;
-    }
-
-
-    static double interestPercentage(double earningPerShare, double marketPrice) {
-        return roi(earningPerShare, marketPrice) * 100;
-    }
-
-    /**
-     * Amount of dollars you pay for 1 dollar return.
-     * <p>
-     * Every X(PE) Dollar i invest, i get 1 dollar a year back.
-     *
-     * @param earningPerShare
-     * @param marketPrice
-     * @return
-     */
-    static double priceByEarning(double earningPerShare, double marketPrice) {
-        return marketPrice / earningPerShare;
-    }
-
 
     /**
      * Perentage (interest) return per year , based on current market price.
@@ -344,14 +342,6 @@ public class Business implements Comparable<Business> {
         return (int) (percentageReturnOnCurrentPrice() - o.percentageReturnOnCurrentPrice());
 
     }
-
-    static void sleep(int sleep) {
-        try {
-            Thread.sleep(sleep);
-        } catch (Exception e) {
-        }
-    }
-
 
     void compute() {
 
@@ -382,14 +372,44 @@ public class Business implements Comparable<Business> {
 
     }
 
-    public static void main(String arg[]) {
+
+    public String getBusinessValue() {
+
+        StringBuffer out = new StringBuffer();
+        out.append(String.format("______________________" + getTicker() + "______________________"));
+        out.append("<br>");
+        out.append(String.format("Price (%.2f) P/E(%.2f) BookValue(%.2f) Debt2Equity(%.2f) CurrentRatio(%.2f) TenYearGrowthBV(%.2f) FiveYearGrowthBV(%.2f) Divident(%.2f)  FedRate(%.2f) ROE(%.2f) \n", marketPrice, pe, bookValue, debtToEquity, currentRatio, tenBookValueGrowth, fiveYearBookValueGrowth, divident, tenYearFedRate, roe));
+        out.append("<br>");
+        out.append(String.format("valuation(<22.5) =  %.2f \n", quickValuation()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + "passing quick valuation = " + quickValuationTool()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Investment safety percentage = %.2f\n", investmentSafetyPercentage()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Interest percentage = %.2f \n", interestPercentage()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Vigilant leadership check = " + vigilantLeaderShip() + "\n"));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Intrinic Value (10 Year book value avg)  of Stock= %.2f \n", intrinicValue()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Intrinic Value (5 Year book value avg)  of Stock= %.2f \n", intrinic5YearBookValue()));
+        out.append("<br>");
+        out.append(String.format(getTicker() + " Interest rate if bought on current market price = %.2f \n", percentageReturnOnCurrentPrice()));
+
+        return out.toString();
+    }
+
+    public static String  getWatchlistValue() {
+
+        StringBuffer out = new StringBuffer();
 
         String[] portfolio = {"SAP", "BRK.B", "WMT", "TGT", "WFC", "AAPL", "BAC", "GS", "AMAT", "MSFT", "GOOG", "NVDA", "COST"};
         List<Business> bs = Arrays.stream(portfolio).map(BusinessFactory.me).filter(bus -> bus.pe != 0).collect(Collectors.toList());//.forEach(
 
         Collections.sort(bs, Collections.reverseOrder());
         System.out.println("Date :" + new Date().toString());
-        bs.stream().forEach(b -> b.printValuation());
+        bs.stream().forEach(b -> out.append(b.getBusinessValue()).append("<br>"));
+        return out.toString();
 
     }
 }
