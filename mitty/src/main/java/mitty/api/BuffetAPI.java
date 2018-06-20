@@ -16,8 +16,5 @@ public class BuffetAPI {
         return business.getBusinessValue();
     }
 
-    @RequestMapping("watchlist")
-    public String getWatchListValue() {
-        return Business.getWatchlistValue();
-    }
+
 }
